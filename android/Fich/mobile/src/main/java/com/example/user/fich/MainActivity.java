@@ -51,6 +51,7 @@ public class MainActivity extends Activity implements
                 r.setPair("y", acYTxv.getText().toString());
                 r.setPair("z", acZTxv.getText().toString());
                 new DBconnect(r).execute();
+                Toast.makeText(MainActivity.this,"Uploaded",Toast.LENGTH_SHORT).show();
             }
         });
     }
