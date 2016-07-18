@@ -28,7 +28,8 @@ public class MainActivity extends Activity implements
 
     private GoogleApiClient googleApiClient;
     private SensorManager sensorManager;
-    private Sensor sensor;
+    private Sensor acSensor;
+    //private Sensor gyroSensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +43,16 @@ public class MainActivity extends Activity implements
                 .build();
 
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        acSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        //gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         googleApiClient.connect();
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        //sensorManager.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_NORMAL*3);
     }
 
     @Override
@@ -81,7 +84,10 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        sendData(String.format("X : %2.5f\nY : %2.5f\nZ : %2.5f",event.values[0],event.values[1],event.values[2]));
+        Sensor sensor = event.sensor;
+        if(sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            sendData("ac_value", event.values[0] + "," + event.values[1] + "," + event.values[2]);
+        }
     }
 
     @Override
@@ -89,9 +95,9 @@ public class MainActivity extends Activity implements
 
     }
 
-    public void sendData(String value){
+    public void sendData(String pairName, String value){
         PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/ga");
-        putDataMapRequest.getDataMap().putString("ac_value", value);
+        putDataMapRequest.getDataMap().putString(pairName, value);
         PutDataRequest putDataRequest = putDataMapRequest.asPutDataRequest();
         Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
     }
