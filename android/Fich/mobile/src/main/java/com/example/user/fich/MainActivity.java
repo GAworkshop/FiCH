@@ -2,13 +2,9 @@ package com.example.user.fich;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,9 +16,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import layout.CardFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,17 +73,17 @@ public class MainActivity extends AppCompatActivity {
         });
 */
 
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        //startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
         tx = (TextView) findViewById(R.id.textView6);
         ty = (TextView) findViewById(R.id.textView7);
         tz = (TextView) findViewById(R.id.textView8);
-        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+        toast = Toast.makeText(this, " ", Toast.LENGTH_SHORT);
 
         initToolbar();
         initViewPager();
         initSwipRefresh();
-
+/*
         mSensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor mSensor = mSensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mSensorMgr.registerListener(new SensorEventListener() {
@@ -104,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
             }
-        }, mSensor, SensorManager.SENSOR_DELAY_GAME);
+        }, mSensor, SensorManager.SENSOR_DELAY_GAME);*/
 
 
 
@@ -169,13 +166,53 @@ public class MainActivity extends AppCompatActivity {
         mTabs = (android.support.design.widget.TabLayout) findViewById(R.id.tabs);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setAdapter(new SamplePagerAdapter());
+        mViewPager.setAdapter(new SamplePagerAdapter(getSupportFragmentManager()));
         //mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabs));
 
         mTabs.setupWithViewPager(mViewPager);
+
+/*
+        mTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(mTabs.getSelectedTabPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mTabs.();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        */
     }
 
-    private class SamplePagerAdapter extends PagerAdapter {
+    private class SamplePagerAdapter extends FragmentPagerAdapter {
+
+        public SamplePagerAdapter(android.support.v4.app.FragmentManager fm){
+            super(fm);
+        }
 
         @Override
         public int getCount() {
@@ -183,8 +220,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object o) {
-            return o == view;
+        public android.support.v4.app.Fragment getItem(int position){
+            return CardFragment.newInstance("","");
         }
 
         @Override
@@ -192,22 +229,6 @@ public class MainActivity extends AppCompatActivity {
             return tab_titles[position];
         }
 
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            View view;
-
-            view = getLayoutInflater().inflate(fragmants_list[position], container, false);
-            container.addView(view);
-            //TextView title = (TextView) view.findViewById(R.id.item_title);
-            //title.setText(String.valueOf(position + 1));
-
-            return view;
-        }
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
 
     }
 
