@@ -132,6 +132,7 @@ public class MyWatchFace extends CanvasWatchFaceService{
         GoogleApiClient mGoogleApiClient;
         SensorManager sensorManager;
         Sensor acSensor;
+        Sensor hrSensor;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -161,16 +162,17 @@ public class MyWatchFace extends CanvasWatchFaceService{
                     .build();
             sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
             acSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            hrSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
             mGoogleApiClient.connect();
             if(mGoogleApiClient.isConnected()){
                 sensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
             }
 
-            new TimerTask(){
+            /*new TimerTask(){
                 public void run(){
 
                 }
-            }.run();
+            }.run();*/
         }
 
         @Override
@@ -286,9 +288,11 @@ public class MyWatchFace extends CanvasWatchFaceService{
                     mBackgroundPaint.setColor(resources.getColor(mTapCount % 2 == 0 ?
                             R.color.background : R.color.background2));
                     if(mTapCount%2==0){
+                        sensorManager.unregisterListener(this,hrSensor);
                         sensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
                     }else{
-                        sensorManager.unregisterListener(this);
+                        sensorManager.unregisterListener(this,acSensor);
+                        sensorManager.registerListener(this, hrSensor, SensorManager.SENSOR_DELAY_NORMAL);
                     }
                     break;
             }
@@ -369,7 +373,9 @@ public class MyWatchFace extends CanvasWatchFaceService{
             Sensor sensor = event.sensor;
             if(sensor.getType() == Sensor.TYPE_ACCELEROMETER){
                 //sendData("ac_value", event.values[0] + "," + event.values[1] + "," + event.values[2]);
-                Log.e("test",event.values[0] + "," + event.values[1] + "," + event.values[2]);
+                Log.e("accelerometer",event.values[0] + "," + event.values[1] + "," + event.values[2]);
+            }else if(sensor.getType() == Sensor.TYPE_HEART_RATE){
+                Log.e("heart rate",event.values[0]+"");
             }
         }
 
