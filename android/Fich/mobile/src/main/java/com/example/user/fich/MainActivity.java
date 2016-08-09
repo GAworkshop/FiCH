@@ -2,12 +2,12 @@ package com.example.user.fich;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -16,14 +16,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import layout.CardFragment;
+import layout.ContactFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
+
+    private ListView left_drawer;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
 
@@ -33,10 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
     private String[] tab_titles = {"醫療資訊卡", "緊急聯絡人", "個人資訊", "鄰近醫療單位", "逃生指引"};
-    private int[] fragmants_list = {R.layout.fragment_card, R.layout.fragment_card,
+    private int[] fragmants_list = {R.layout.fragment_contact, R.layout.fragment_card,
             R.layout.fragment_card, R.layout.fragment_card, R.layout.fragment_card};
 
     SensorManager mSensorMgr;
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
         initToolbar();
         initViewPager();
-        initSwipRefresh();
+
 /*
         mSensorMgr = (SensorManager) getSystemService(SENSOR_SERVICE);
         Sensor mSensor = mSensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -115,17 +116,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initSwipRefresh(){
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-    }
-
     private void initToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Set an OnMenuItemClickListener to handle menu item clicks
@@ -145,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        left_drawer = (ListView) findViewById(R.id.left_drawer);
+
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close) {
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -159,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mActionBarDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
     }
 
     private void initViewPager(){
@@ -197,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mTabs.();
+
             }
 
             @Override
@@ -205,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        */
+*/
     }
 
     private class SamplePagerAdapter extends FragmentPagerAdapter {
@@ -221,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public android.support.v4.app.Fragment getItem(int position){
-            return CardFragment.newInstance("","");
+            return ContactFragment.newInstance("","");
         }
 
         @Override
@@ -263,6 +255,11 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }

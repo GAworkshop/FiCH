@@ -3,6 +3,9 @@ package com.example.user.fich;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -68,9 +71,9 @@ public class DBconnect extends AsyncTask<String, String, String>{
 
         try {
             Thread.sleep(1500);
-            String parm = "x=0.123&y=0.123&z=0.123";
-            parm = parseData(this.dbRequest.data);
-            Log.e("debugTTTT", parm);
+            String param = "x=0.123&y=0.123&z=0.123";
+            param = parseData(this.dbRequest.data);
+            Log.e("debugTTTT", param);
 
             url = new URL(this.dbRequest.url);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -86,13 +89,13 @@ public class DBconnect extends AsyncTask<String, String, String>{
             urlConnection.setChunkedStreamingMode(0);
             urlConnection.setUseCaches(false);
 
-            urlConnection.setRequestProperty("Content-Length", String.valueOf(parm.length()));
+            urlConnection.setRequestProperty("Content-Length", String.valueOf(param.length()));
 
             try {
                 OutputStream os = urlConnection.getOutputStream();
                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
 
-                out.write(parm);
+                out.write(param);
                 out.flush();
                 out.close();
                 os.close();
@@ -132,6 +135,45 @@ public class DBconnect extends AsyncTask<String, String, String>{
         }
 
         return null;
+
+    }
+
+    public JSONArray parseResult(String result) {
+        Log.e("debugTTTT", "parse Start!");
+        JSONArray arr;
+        try{
+            //if result is JSON array, returns it
+            Log.e("debugTTTT", "parse JSON Array");
+            arr = new JSONArray(result);
+            return arr;
+        }catch(JSONException e){
+            //returned value is not JSON, possibilly be a exit code
+            String code = "[false]";
+            Log.e("debugTTTT", "parse JSON Array Fail~");
+            Log.e("debugTTTT", result);
+
+            if(result.equals("200")){
+                //code = "[true]";
+            }
+            try {
+                Log.e("~~DEBUG~~", "result: " + result);
+                switch (Integer.parseInt(result)){
+                    case 100:
+                    case 200 :
+                    case 300:
+                        code = "[true]";
+                        break;
+                    default:
+                        code = "[false]";
+
+                }
+
+                return new JSONArray(code);
+
+            }catch (Exception e2){
+                return null;
+            }
+        }
 
     }
 

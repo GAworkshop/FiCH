@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -58,8 +59,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
+     *
      */
+    private static final String login = "loginState";
     private static final int REQUEST_READ_CONTACTS = 0;
+    SharedPreferences pref = getApplication().getSharedPreferences(login, MODE_PRIVATE);
+    SharedPreferences.Editor prefEdit = pref.edit();
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -233,12 +238,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         if (jsonArray.getBoolean(0)) {
                             Log.e("debugTTTT", "yes");
                             Toast.makeText(LoginActivity.this, "User Logged In!!", Toast.LENGTH_SHORT);
+                            prefEdit.putBoolean("isLogin", true);
+                            prefEdit.commit();
                             finish();
                         } else {
                             Log.e("debugTTTT", "no");
                             mPasswordView.setError(getString(R.string.error_incorrect_password));
                             mPasswordView.requestFocus();
                             Toast.makeText(LoginActivity.this, "User Logged FAIL!!", Toast.LENGTH_SHORT);
+                            prefEdit.putBoolean("isLogin", false);
+                            prefEdit.commit();
                         }
                     }catch (JSONException e){
                         e.printStackTrace();
