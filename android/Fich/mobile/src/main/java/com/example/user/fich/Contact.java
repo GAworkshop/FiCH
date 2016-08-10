@@ -1,15 +1,17 @@
 package com.example.user.fich;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by huang on 2016/8/9.
  */
 public class Contact {
     private int id;
-    private int image;
+    private Bitmap image;
     private String name;
     private String phone;
 
-    public Contact(int id, int image, String name, String phone){
+    public Contact(int id, Bitmap image, String name, String phone){
         this.id = id;
         this.image = image;
         this.name = name;
@@ -24,11 +26,11 @@ public class Contact {
         this.id = id;
     }
 
-    public int getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 

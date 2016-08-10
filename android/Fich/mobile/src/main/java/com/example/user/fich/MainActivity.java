@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -213,13 +214,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public android.support.v4.app.Fragment getItem(int position){
-            return ContactFragment.newInstance("","");
+            if(position == 0)
+                return ContactFragment.newInstance("","");
+            else
+                return new Fragment();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             return tab_titles[position];
         }
+
+
 
 
     }
