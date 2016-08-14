@@ -24,9 +24,11 @@
             android:minHeight="?attr/actionBarSize" />
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             app:tabMode="scrollable"/>
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
@@ -37,12 +39,16 @@
     </RelativeLayout>
 </FrameLayout>
 <!-- The navigation drawer -->
-<ListView android:id="@+id/left_drawer"
-    android:layout_width="240dp"
+
+
+<android.support.design.widget.NavigationView
+    android:id="@+id/left_drawer"
+    android:layout_width="280dp"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:background="@color/drawerColor"
-    android:choiceMode="singleChoice"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0dp" />
+    android:background="@color/drawerBackground"
+    android:dividerHeight="1dp"
+    app:headerLayout="@layout/drawer_header"
+    app:menu="@menu/drawer_menu"
+    android:choiceMode="singleChoice" />
 </android.support.v4.widget.DrawerLayout>

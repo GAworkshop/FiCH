@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/menu_top">
+        <item
+            android:id="@+id/navigation_item_1"
+            android:orderInCategory="0"
+            android:checked="true"
+            android:icon="@drawable/ic_card"
+            android:title="@string/Frag_Card"/>
+        <item
+            android:id="@+id/navigation_item_2"
+            android:orderInCategory="1"
+            android:icon="@drawable/ic_contact"
+            android:title="@string/Frag_Contact" />
+        <item
+            android:id="@+id/navigation_item_3"
+            android:orderInCategory="2"
+            android:icon="@drawable/ic_info"
+            android:title="@string/Frag_Info"/>
+        <item
+            android:id="@+id/navigation_item_4"
+            android:orderInCategory="3"
+            android:icon="@drawable/ic_nearby"
+            android:title="@string/Frag_Nearby"/>
+        <item
+            android:id="@+id/navigation_item_5"
+            android:orderInCategory="4"
+            android:icon="@drawable/ic_escape"
+            android:title="@string/Frag_Escape"/>
+
+
+    </group>
+
+    <group
+        android:checkableBehavior="single"
+        android:id="@+id/menu_bottom">
+        <item
+            android:icon="@drawable/ic_info_black_24dp"
+            android:orderInCategory="5"
+            android:title="Send Feed Back"/>
+        <item
+            android:icon="@drawable/ic_info_black_24dp"
+            android:orderInCategory="6"
+            android:title="more Info"/>
+
+
+    </group>
+</menu>

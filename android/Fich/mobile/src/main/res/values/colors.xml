@@ -6,4 +6,5 @@
     <!-- alpha*2 rrggbb-->
     <color name="titleColor">#FE8297</color>
     <color name="drawerColor">#AAFFF49B</color>
+    <color name="drawerBackground">#FFFFFF</color>
 </resources>
