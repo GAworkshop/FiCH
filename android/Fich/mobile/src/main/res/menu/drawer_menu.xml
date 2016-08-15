@@ -38,11 +38,13 @@
         android:checkableBehavior="single"
         android:id="@+id/menu_bottom">
         <item
-            android:icon="@drawable/ic_info_black_24dp"
+            android:id="@+id/navigation_item_feedback"
+            android:icon="@drawable/ic_feedback"
             android:orderInCategory="5"
             android:title="Send Feed Back"/>
         <item
-            android:icon="@drawable/ic_info_black_24dp"
+            android:id="@+id/navigation_item_moreinfo"
+            android:icon="@drawable/ic_cloud"
             android:orderInCategory="6"
             android:title="more Info"/>
 

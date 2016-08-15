@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     SensorManager mSensorMgr;
     TextView tx, ty, tz;
     Toast toast;
+
+    private static final String page_url = "http://140.115.207.72/test.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         //mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabs));
 
         mTabs.setupWithViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(tab_icons.length);     //make tab smooth
         //mTabs.getTabAt(0).setIcon(R.drawable.ic_card);
 
         //mTabs.getTabAt(0).setCustomView();
@@ -205,7 +209,8 @@ public class MainActivity extends AppCompatActivity {
         mTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(mTabs.getSelectedTabPosition());
+                //mViewPager.setCurrentItem(mTabs.getSelectedTabPosition());
+                Log.e("", ""+tab.getText());
             }
 
             @Override
@@ -227,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                Log.e("", ""+mTabs.getTabAt(position).getText());
             }
 
             @Override
@@ -243,10 +248,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 Log.e("~~DEBUG~~", "" + item.getOrder());
+
+                switch (item.getItemId()){
+                    case R.id.navigation_item_feedback:
+                        break;
+                    case R.id.navigation_item_moreinfo:
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(page_url));
+                        startActivity(browserIntent);
+                        break;
+                    default:
+                        mViewPager.setCurrentItem(item.getOrder());
+                        break;
+                }
                 item.setChecked(true);
-                mViewPager.setCurrentItem(item.getOrder());
                 mDrawerLayout.closeDrawer(left_drawer);
-                return false;
+                return true;
             }
         });
     }
@@ -271,8 +287,11 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return ContactFragment.newInstance("","");
                 case 2:
+                    return new Fragment();
                 case 3:
+                    return new Fragment();
                 case 4:
+                    return new Fragment();
                 default:
                     return new Fragment();
             }
