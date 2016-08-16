@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +21,7 @@ import java.util.TimerTask;
 
 public class LocService extends Service {
     private final IBinder binder = new ServiceBinder();
-    private static final String BROADCAST_LocData = "GAWorkShop.Fich.SendLocData";
+//    private static final String BROADCAST_LocData = "GAWorkShop.Fich.SendLocData";
     private Timer timer; // 用來定時定位的Timer
     static final long taskDelay = 0; // 啟動Timer的延遲時間 : 立即
     private long taskPeriod = 300000; // Timer每次任務的間隔時間 : 300秒 **每決定一次位置用3個定位點平均的話間隔至少是90秒,平均數越多間隔要越長**
@@ -32,6 +31,7 @@ public class LocService extends Service {
     LocationManager lm; // 定位總管
     private int locateCount = 0; // 暫存定了幾次的計數器
     static final int locateTimes = 3; // 決定一次位置要用 3 個定位點來平均
+    private MySQLiteHelper helper;
 
     public class ServiceBinder extends Binder {
         LocService getService() {
@@ -43,6 +43,9 @@ public class LocService extends Service {
         super.onCreate();
         timer = new Timer();
         locListener = new LocListener();
+        if (helper == null) {
+            helper = new MySQLiteHelper(this);
+        }
     }
 
     public int onStartCommand(Intent intent, int flags, int startId){
@@ -78,6 +81,9 @@ public class LocService extends Service {
         }catch (SecurityException e){
 
         }
+        if (helper != null) {
+            helper.close();
+        }
     }
 
     private final Handler myHandler = new Handler(){
@@ -86,17 +92,16 @@ public class LocService extends Service {
         public void handleMessage(Message msg)
         {
             lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-            Log.e("~~DEBUG~~", "lm : "+ lm.toString());
             String bestProvider = lm.getBestProvider(new Criteria(), true); // 取得最佳的定位提供者
             if (bestProvider.equals("gps") || bestProvider.equals("network")) { // 有開定位
-                System.out.println("Location : On , the locating provider is " + bestProvider);
+                System.out.println("MyLocation : On , the locating provider is " + bestProvider);
                 try {
                     lm.requestLocationUpdates(bestProvider, MIN_TIME, MIN_DIST, locListener);
                 }catch (SecurityException e){
 
                 }
             } else { // 沒開定位,傳送通知提醒
-                System.out.println("Location : Off , please check the location setting");
+                System.out.println("MyLocation : Off , please check the location setting");
                 //用通知發送訊息 : 沒開定位
                 NotificationManager notificationManager =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -123,14 +128,23 @@ public class LocService extends Service {
         if(locateCount < locateTimes-1){
             locateCount++;
         }else if(locateCount == locateTimes-1){
+            /*
             //統計並送出
             Intent intent = new Intent(BROADCAST_LocData);
             Bundle bundle = new Bundle();
-            bundle.putDouble("longitude",tempLongitude/locateTimes);
-            bundle.putDouble("latitude",tempLatitude/locateTimes);
-            bundle.putLong("time",location.getTime());
+            MyLocation recordLoc = new MyLocation(tempLongitude/locateTimes,tempLatitude/locateTimes,new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date(location.getTime())));
+            bundle.putSerializable("recordLoc",recordLoc);
             intent.putExtras(bundle);
             sendBroadcast(intent);
+            */
+            //統計並存至SQLite
+            MyLocation recordLoc = new MyLocation(tempLongitude/locateTimes,tempLatitude/locateTimes,location.getTime());
+            long rowId = helper.insert(recordLoc);
+            if (rowId != -1) {
+                System.out.println("insert至SQLite成功");
+            } else {
+                System.out.println("insert至SQLite失敗");
+            }
             locateCount = 0;
             tempLongitude = 0;
             tempLatitude = 0;

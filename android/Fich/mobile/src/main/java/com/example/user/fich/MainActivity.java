@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import layout.CardFragment;
 import layout.ContactFragment;
+import layout.MapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -187,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         //mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabs));
 
         mTabs.setupWithViewPager(mViewPager);
-        mViewPager.setOffscreenPageLimit(tab_icons.length);     //make tab smooth
+        mViewPager.setOffscreenPageLimit(1);     //sets how many pages should be hold in memory
         //mTabs.getTabAt(0).setIcon(R.drawable.ic_card);
 
         //mTabs.getTabAt(0).setCustomView();
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+*/
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -233,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 Log.e("", ""+mTabs.getTabAt(position).getText());
+                left_drawer.getMenu().getItem(position).setChecked(true);
             }
 
             @Override
@@ -240,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-*/
+
     }
 
     private void setListeners(){
@@ -281,15 +283,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public android.support.v4.app.Fragment getItem(int position){
 
+
             switch (position){
                 case 0:
                     return CardFragment.newInstance("", "");
                 case 1:
-                    return ContactFragment.newInstance("","");
+                    return ContactFragment.newInstance("", "");
                 case 2:
                     return new Fragment();
                 case 3:
-                    return new Fragment();
+                    return MapFragment.newInstance("", "");
                 case 4:
                     return new Fragment();
                 default:

@@ -52,6 +52,10 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
         <service
             android:name=".LocService"
             android:enabled="true"

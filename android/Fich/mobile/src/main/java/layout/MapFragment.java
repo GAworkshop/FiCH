@@ -1,11 +1,8 @@
 package layout;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,19 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.user.fich.DataService;
+import com.example.user.fich.MyLocation;
+import com.example.user.fich.MySQLiteHelper;
 import com.example.user.fich.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,11 +39,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private DataService dataService;
-    private ArrayList<com.example.user.fich.Location> locList;
+    private ArrayList<MyLocation> locList;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private MapView mapView;
+
+
+    private MySQLiteHelper helper;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -57,20 +57,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Required empty public constructor
     }
 
-    private ServiceConnection dataServiceCon = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder binder) {
 
-            locList = dataService.getLocList();
-
-            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            dataService = null;
-        }
-    };
 
     /**
      * Use this factory method to create a new instance of
@@ -94,64 +81,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("~~DEBUG~~", "map onCreate");
+        if (helper == null) {
+            helper = new MySQLiteHelper(getActivity()); // ***待測試***
+        }
+        // 抓資料 待測試
+        locList = helper.getList();
+        /*
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        */
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_map, container, false);
+        Log.e("~~DEBUG~~", "map onCreateView");
+        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        mapView = (MapView) rootView.findViewById(R.id.map);
 
-        mMapView = (MapView) view.findViewById(R.id.map);
-        //mMapView.onCreate(savedInstanceState);
-        //mMapView.onResume();
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        MapsInitializer.initialize(getActivity());
+        mapView.getMapAsync(this);
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap map) {
-                mMap = mMap;
-
-                // For showing a move to my location button
-                try {
-                    mMap.setMyLocationEnabled(true);
-                }catch (SecurityException e){
-
-                }
-                // For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-
-                LatLng latlng =null;
-                for(com.example.user.fich.Location loc:locList){
-                    latlng = new LatLng(loc.getLatitude(),loc.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(latlng).title(new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date(loc.getTime()))));
-                }
-                if(latlng == null){
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(23.8246732,121.0472636)));
-                    mMap.moveCamera(CameraUpdateFactory.zoomTo(8));
-                }else{
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
-                    mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-                }
-            }
-        });
-
-        return view;
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -164,8 +121,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        Log.e("~~DEBUG~~", "map onResume");
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.e("~~DEBUG~~", "map onPause");
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("~~DEBUG~~", "map onDestroy");
+        mapView.onDestroy();
+        if (helper != null) {
+            helper.close();
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Log.e("~~DEBUG~~", "map onLowMemory");
+        mapView.onLowMemory();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.e("~~DEBUG~~", "map onAttach");
         /*
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -179,17 +168,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.e("~~DEBUG~~", "map onDetach");
         //mListener = null;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.e("~~DEBUG~~", "map onMapReady");
         mMap = googleMap;
-
         LatLng latlng =null;
-        for(com.example.user.fich.Location loc:locList){
+        try {
+            mMap.setMyLocationEnabled(true);
+        }catch (SecurityException e){
+
+        }
+        for(MyLocation loc:locList){
+
             latlng = new LatLng(loc.getLatitude(),loc.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latlng).title(new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date(loc.getTime()))));
+            mMap.addMarker(new MarkerOptions().position(latlng).title(loc.getDateTime()));
         }
         if(latlng == null){
             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(23.8246732,121.0472636)));
@@ -198,7 +194,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         }
-
     }
 
     /**

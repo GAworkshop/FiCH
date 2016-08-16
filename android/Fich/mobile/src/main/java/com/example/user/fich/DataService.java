@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class DataService extends Service {
     private final IBinder binder = new ServiceBinder();
     private static final String BROADCAST_LocData = "GAWorkShop.Fich.SendLocData";
-    private ArrayList<com.example.user.fich.Location> locList = new ArrayList<com.example.user.fich.Location>();
+    private ArrayList<Location> locList = new ArrayList<Location>();
     private LocDataReceiver locDataReceiver;
 
     public class ServiceBinder extends Binder {
@@ -65,7 +65,7 @@ public class DataService extends Service {
         }
     }
 
-    public ArrayList<com.example.user.fich.Location> getLocList(){
+    public ArrayList<Location> getLocList(){
         return locList;
     }
 }
