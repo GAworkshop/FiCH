@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>FiCH - Dashboard</title>
+    
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css'>
+    
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script><!-- jquery -->
+    
+    <!-- 最新編譯和最佳化的 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <!-- 選擇性佈景主題 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+    <!-- 最新編譯和最佳化的 JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="dashboard.css">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="main.js"></script>
+    
+    <script>
+        
+    </script>
+</head>
+<body>
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top" role=navigation>
+        <div class=container-fluid>
+            
+            <div class=navbar-header>
+                <button type=button class="navbar-toggle collapsed" data-toggle=collapse data-target=#navbar aria-expanded=false aria-controls=navbar>
+                    <span class=sr-only>Toggle navigation</span>
+                    <span class=icon-bar></span>
+                    <span class=icon-bar></span>
+                    <span class=icon-bar></span>
+                </button>
+                <a class=navbar-brand href=#>FiCH</a>
+            </div>
+            
+            <div id=navbar class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href=#>Dashboard</a>
+                    <li><a href=#>Settings</a>
+                    <li><a href=#>Profile</a>
+                    <li><a href=#>Help</a>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <input class=form-control placeholder="Search...">
+                </form>
+            </div>
+            
+        </div>
+    </nav>
+    
+    <div class='container-fluid'>
+        
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li class="active">
+                        <a href="#" onclick="buttonClicked(this)" id="overview">Overview</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="buttonClicked(this)" id="member">Memers</a>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#myModal">Add New Member</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="buttonClicked(this)" id="export">Export</a>
+                    </li>
+                </ul>
+                
+                <ul class="nav nav-sidebar hidden">
+                    <li>
+                        <a href="">Nav item</a>
+                    </li>
+                    <li>
+                        <a href="">Nav item again</a>
+                    </li>
+                    <li>
+                        <a href="">One more nav</a>
+                    </li>
+                    <li>
+                        <a href="">Another nav item</a>
+                    </li>
+                    <li>
+                        <a href="">More navigation</a>
+                    </li>
+                </ul>
+                
+                <ul class="nav nav-sidebar hidden">
+                    <li>
+                        <a href="">Nav item again</a>
+                    </li>
+                    <li>
+                        <a href="">One more nav</a>
+                    </li>
+                    <li>
+                        <a href="">Another nav item</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h1 class="page-header">Dashboard</h1>
+                <div class="row placeholders">
+                    <div class="col-xs-6 col-sm-2 placeholder">
+                        <img class="img-responsive" alt="200x200" src="p1.png" data-holder-rendered="true">
+                        <h4>楊秉樺</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <img class="img-responsive" alt="200x200" src="p2.png" data-holder-rendered="true">
+                        <h4>曾子軒</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-2 placeholder">
+                        <img class="img-responsive" alt="200x200" src="p3.png" data-holder-rendered="true">
+                        <h4>羅芃</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <img class="img-responsive" alt="200x200" src="p4.png" data-holder-rendered="true">
+                        <h4>黃琮閔</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-2 placeholder">
+                        <img class="img-responsive" alt="200x200" src="p5.png" data-holder-rendered="true">
+                        <h4>鄭至閎</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                </div>
+                <h2 class="sub-header">Member List</h2>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table1">
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>使用者名稱</th>
+                                <th>使用者密碼</th>
+                                <th>電話號碼</th>
+                                <th>是否通過驗證</th>
+                                <th>刪除</th>
+                                <th>時間戳記</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+ 
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <form id="form-Add">
+            <table>
+                <tr>
+                    <td>name</td>
+                    <td>pass</td>
+                    <td>phone</td>
+                </tr>
+                <tr>
+                    <td><input type="text" name="user_name" id="name">&nbsp;</td>
+                    <td>&nbsp;<input type="text" name="user_pass" id="pass">&nbsp;</td>
+                    <td>&nbsp;<input type="number" name="phone" id="phone"></td>
+                </tr>
+            </table>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="createUserSubmit">Create!</button>
+      </div>
+    </div>
+  </div>
+    
+
+</body>
+</html>

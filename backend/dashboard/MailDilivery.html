@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+    
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css'>
+    
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script><!-- jquery -->
+    
+    <!-- 最新編譯和最佳化的 CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+<!-- 選擇性佈景主題 -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+<!-- 最新編譯和最佳化的 JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    
+    <script>
+        function output(request) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    document.getElementById("output").innerHTML = xhttp.responseText;
+                }
+            };
+            xhttp.open("POST", "mailD-test.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(request);
+        }
+        
+        function go(o){
+            alert(o.id);
+        }
+    
+    </script>
+    
+    <style>
+        .container{
+            width: 95%;
+        }
+        
+        .btn.active{
+            background-color: #a5892d;
+            border: 1px solid transparent;
+        }
+        .btn[disabled]{
+            background-color: #7fbc8d;
+            border: 1px solid transparent;
+        }
+    </style>
+    
+</head>
+<body>
+    
+    <div class="container">
+    
+        <h2 id="topic1"></h2>
+        <div class='table-responsive'>
+            <table id="table1" class="table table-hover">
+
+            </table>
+        </div>
+
+        <h2 id="topic2"></h2>
+        <div class='table-responsive'>
+            <table id="table2" class="table table-hover">
+
+            </table>
+        </div>
+
+        <button id="btn" onclick="output()" class="btn btn-primary btn-lg">GO</button>
+
+        <div id="output"></div>
+    
+    </div>
+    
+    
+
+    <script>
+        
+        function setText(id, text){
+            document.getElementById(id).innerHTML = text;
+        }
+        
+        function displayTableDataRow(place, array, checked){
+            
+            //add a new row to the end of table
+            //console.log(document.getElementById("table"));
+
+            var tr = document.getElementById(place).insertRow();
+            
+            
+            
+            if(checked){
+                td = tr.insertCell();
+                td.innerHTML = '<div class="" data-toggle="buttons"><label class="btn btn-primary" disabled><input class="check" type="checkbox" autocomplete="off"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></label></div>';
+            }
+            else{
+                td = tr.insertCell();
+                td.innerHTML = '<div class="" data-toggle="buttons"><label class="btn btn-primary"><input class="check" type="checkbox" autocomplete="off"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></label></div>';
+            }
+            
+            for(var i in array){
+                console.log(array[i]);
+                td = tr.insertCell();
+                td.innerHTML = array[i];
+            }
+
+            //var lastAdd = document.getElementsByClassName("check");
+            //setEvent(lastAdd[lastAdd.length-1]);
+            
+
+        }
+        
+        function setEvent(target){
+            for(var i = 0; i < all.length; i++){
+            //target.options.add(new Option(all[i]));
+            var o = new Option(all[i]);
+            o.value = i+1;
+            target.options.add(o);
+        }
+}
+    </script>
+</body>
+</html>
