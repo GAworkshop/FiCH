@@ -15,6 +15,27 @@
     <string name="Frag_Nearby">鄰近醫療單位</string>
     <string name="Frag_Escape">逃生指引</string>
 
+    <!-- info setting -->
+    <string name="person_name">姓 名</string>
+    <string name="birthday">生 日</string>
+    <string name="blood">血 型</string>
+    <string name="history">個人病史</string>
+    <string name="allergic">藥物過敏</string>
+    <string name="setting_ok">完成</string>
+
+    <!-- info setting hint text -->
+    <string name="person_name_hint">例:王大明</string>
+    <string name="birthday_hint">選擇您的生日</string>
+    <string name="blood_hint">您的血型</string>
+    <string name="history_hint">請列出您的病史</string>
+    <string name="allergic_hint">請列出您的藥物過敏狀況</string>
+
+    <!-- info setting error -->
+    <string name="error_name">請輸入姓名</string>
+    <string name="error_birthday">請選擇生日</string>
+    <string name="error_blood">請輸入血型</string>
+
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -99,4 +120,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="title_activity_set_info">SetInfoActivity</string>
 </resources>

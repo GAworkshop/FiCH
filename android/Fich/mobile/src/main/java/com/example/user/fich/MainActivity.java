@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import layout.CardFragment;
 import layout.ContactFragment;
+import layout.EscapeFragment;
 import layout.MapFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -59,10 +60,15 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String page_url = "http://140.115.207.72/test.html";
 
+    PreferencesHelper prefHelpr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("~~DEBUG~~", "main onCreate");
         setContentView(R.layout.activity_main);
+
+        prefHelpr = new PreferencesHelper(this);
 
         //System.out.println("GGGGGGGGGGGGGG");
         /*
@@ -88,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
-
+        startActivity(new Intent(MainActivity.this, SetInfoActivity.class));
         //startActivity(new Intent(MainActivity.this, LoginActivity.class));
         //startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
@@ -138,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        Log.e("~~DEBUG~~", "main onDestroy");
         //toast.cancel();
 
     }
@@ -294,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                 case 3:
                     return MapFragment.newInstance("", "");
                 case 4:
-                    return new Fragment();
+                    return new EscapeFragment().newInstance("", "");
                 default:
                     return new Fragment();
             }
@@ -355,6 +362,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e("~~DEBUG~~", "main onActivityResult");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.e("~~DEBUG~~", "main onResume");
+        Toast.makeText(this,""+prefHelpr.getString("name"), Toast.LENGTH_SHORT).show();
+        //if not set self info yet, go back to set
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.e("~~DEBUG~~", "main onPause");
     }
 
 }

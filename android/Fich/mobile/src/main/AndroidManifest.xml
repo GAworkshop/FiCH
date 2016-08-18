@@ -50,7 +50,7 @@
             android:label="@string/title_activity_qqqnav" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -63,7 +63,11 @@
         <service
             android:name=".DataService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name=".SetInfoActivity"
+            android:label="@string/title_activity_set_info"></activity>
     </application>
 
 </manifest>
