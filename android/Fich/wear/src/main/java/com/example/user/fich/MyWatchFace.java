@@ -513,9 +513,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         }
 
-        public void sendHrData(double value, long time){
+        public void sendHrData(int value, long time){
             PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/hrData");
-            putDataMapRequest.getDataMap().putDouble("recordHr", value);
+            putDataMapRequest.getDataMap().putInt("recordHr", value);
             putDataMapRequest.getDataMap().putLong("time", time);
             PutDataRequest putDataRequest = putDataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(mGoogleApiClient, putDataRequest);

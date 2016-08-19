@@ -25,6 +25,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             COL_LAT + " DOUBLE NOT NULL, " +
             COL_TIME + " LONG NOT NULL ); ";
 
+    private static final String HR_TABLE_NAME = "HEART_RATE_RECORD";
+    private static final String COL_HR = "heartRate";
+    private static final String COL_HR_TIME = "time";
+    private static final String HR_TABLE_CREATE = "CREATE TABLE " + HR_TABLE_NAME + " ( " +
+            COL_HR + " INT NOT NULL, " +
+            COL_HR_TIME + " LONG NOT NULL ); ";
+
     public MySQLiteHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -32,6 +39,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE);
+        db.execSQL(HR_TABLE_CREATE);
     }
 
     @Override
@@ -47,6 +55,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         values.put(COL_LAT, loc.getLatitude());
         values.put(COL_TIME, loc.getUnixTime());
         return db.insert(TABLE_NAME, null, values);
+    }
+
+    public long insertHR(MyHeartRate hr){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_HR, hr.getHeartRate());
+        values.put(COL_HR_TIME, hr.getUnixTime());
+        return db.insert(HR_TABLE_NAME, null, values);
     }
 
     public ArrayList<MyLocation> getList(){
@@ -65,6 +81,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         }
         cursor.close();
         return locList;
+    }
+
+    public ArrayList<MyHeartRate> getHRList(){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = {
+                COL_HR, COL_HR_TIME
+        };
+        Cursor cursor = db.query(HR_TABLE_NAME, columns, null, null, null, null, null);
+        ArrayList<MyHeartRate> hrList = new ArrayList<>();
+        while(cursor.moveToNext()){
+            int hr = cursor.getInt(0);
+            long time = cursor.getLong(1);
+            MyHeartRate mHR = new MyHeartRate(hr, time);
+            hrList.add(mHR);
+        }
+        cursor.close();
+        return hrList;
     }
 
     public boolean deleteAll() {

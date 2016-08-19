@@ -228,7 +228,15 @@ public class LocService extends Service implements
                 DataItem item = event.getDataItem();
                 if (item.getUri().getPath().compareTo("/hrData") == 0) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
-                    System.out.println("Heart rate data received : " + new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date(dataMap.getLong("time"))) + " " + dataMap.getDouble("recordHr"));
+                    MyHeartRate hr = new MyHeartRate(dataMap.getInt("recordHr"),dataMap.getLong("time"));
+                    long rowId = helper.insertHR(hr);
+                    if (rowId != -1) {
+                        System.out.println("insert HeartRate至SQLite成功");
+                    } else {
+                        System.out.println("insert HeartRate至SQLite失敗");
+                    }
+                    System.out.println(hr.toString());
+                    // 上傳至Server
                 }else if (item.getUri().getPath().compareTo("/SosSignal") == 0) {
                     for(int i=0;i<10;i++){
                         System.out.println("SOS signal received !!!!! "+DataMapItem.fromDataItem(item).getDataMap().getInt("SOS"));
