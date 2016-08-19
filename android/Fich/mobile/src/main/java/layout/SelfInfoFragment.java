@@ -1,6 +1,7 @@
 package layout;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,12 @@ import android.view.ViewGroup;
 
 import com.example.user.fich.R;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +79,35 @@ public class SelfInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_self_info, container, false);
 
         lineChart = (LineChart) view.findViewById(R.id.lineChart1);
-        
+
+        ArrayList<String> xAXES = new ArrayList<>();
+        ArrayList<Entry> yAXESheart = new ArrayList<>();
+        double x = 0 ;
+        int numDataPoints = 200;
+        for(int i=0;i<numDataPoints;i++){
+            float heart = (float) (Math.random()*30+70);
+            x+=50;
+            yAXESheart.add(new Entry(i,heart));
+            xAXES.add(i, String.valueOf(x));
+        }
+        String[] xaxes = new String[xAXES.size()];
+        for(int i=0; i<xAXES.size();i++){
+            xaxes[i] = xAXES.get(i).toString();
+        }
+
+        ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
+
+
+        LineDataSet lineDataSet2 = new LineDataSet(yAXESheart,"heart");
+        lineDataSet2.setDrawCircles(true);
+        lineDataSet2.setColor(Color.RED);
+
+        lineDataSets.add(lineDataSet2);
+
+        lineChart.setData(new LineData(lineDataSets));
+        lineChart.enableScroll();
+
+        lineChart.setVisibleXRangeMaximum(120);
 
         return view;
     }

@@ -29,6 +29,7 @@ import layout.CardFragment;
 import layout.ContactFragment;
 import layout.EscapeFragment;
 import layout.MapFragment;
+import layout.SelfInfoFragment;
 import layout.SetInfoActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -301,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return ContactFragment.newInstance("", "");
                 case 2:
-                    return new Fragment();
+                    return new SelfInfoFragment().newInstance("", "");
                 case 3:
                     return MapFragment.newInstance("", "");
                 case 4:
