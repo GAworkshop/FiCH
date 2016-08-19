@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -87,6 +88,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
+        //
         setContentView(R.layout.activity_login);
 
         prefHelpr = new PreferencesHelper(this);
@@ -244,6 +249,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             prefHelpr.storeData("isLogin", true);
                             //prefEdit.putBoolean("isLogin", true);
                             //prefEdit.commit();
+                            //finish();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
                             Log.e("debugTTTT", "no");

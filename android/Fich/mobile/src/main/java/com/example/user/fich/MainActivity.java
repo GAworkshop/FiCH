@@ -29,6 +29,7 @@ import layout.CardFragment;
 import layout.ContactFragment;
 import layout.EscapeFragment;
 import layout.MapFragment;
+import layout.SetInfoActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         prefHelpr = new PreferencesHelper(this);
+
+
 
         //System.out.println("GGGGGGGGGGGGGG");
         /*
@@ -129,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 測試別項功能中,暫時關閉
         //startService(new Intent(this, LocService.class));
+
 
     }
 
@@ -359,6 +363,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void goInfoSetting(View view){
+        startActivity(new Intent(MainActivity.this, SetInfoActivity.class));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -370,6 +378,15 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.e("~~DEBUG~~", "main onResume");
         Toast.makeText(this,""+prefHelpr.getString("name"), Toast.LENGTH_SHORT).show();
+        if(prefHelpr.getBoolean(getResources().getString(R.string.is_setting_done))){
+            findViewById(R.id.tabs).setVisibility(View.VISIBLE);
+            findViewById(R.id.viewpager).setVisibility(View.VISIBLE);
+            findViewById(R.id.start_setting_frame).setVisibility(View.GONE);
+        }else {
+            findViewById(R.id.tabs).setVisibility(View.INVISIBLE);
+            findViewById(R.id.viewpager).setVisibility(View.INVISIBLE);
+            findViewById(R.id.start_setting_frame).setVisibility(View.VISIBLE);
+        }
         //if not set self info yet, go back to set
     }
 

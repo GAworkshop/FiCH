@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--indicates that user data has been set or not-->
+    <string name="is_setting_done">is_setting_done</string>
+
+    <!-- data of user -->
+    <string name="name">u_name</string>
+    <string name="birthday">birthday</string>
+    <string name="blood">blood</string>
+    <string name="history">history</string>
+    <string name="allergic">allergic</string>
+
+
+</resources>

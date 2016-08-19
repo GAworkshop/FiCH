@@ -16,11 +16,11 @@
     <string name="Frag_Escape">逃生指引</string>
 
     <!-- info setting -->
-    <string name="person_name">姓 名</string>
-    <string name="birthday">生 日</string>
-    <string name="blood">血 型</string>
-    <string name="history">個人病史</string>
-    <string name="allergic">藥物過敏</string>
+    <string name="lbl_person_name">姓 名</string>
+    <string name="lbl_birthday">生 日</string>
+    <string name="lbl_blood">血 型</string>
+    <string name="lbl_history">個人病史</string>
+    <string name="lbl_allergic">藥物過敏</string>
     <string name="setting_ok">完成</string>
 
     <!-- info setting hint text -->

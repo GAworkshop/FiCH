@@ -70,7 +70,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".SetInfoActivity"
+            android:name="layout.SetInfoActivity"
             android:label="@string/title_activity_set_info"></activity>
     </application>
 

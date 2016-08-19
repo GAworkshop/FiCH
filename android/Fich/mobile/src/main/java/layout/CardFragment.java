@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.user.fich.PreferencesHelper;
 import com.example.user.fich.R;
 
 /**
@@ -22,6 +24,7 @@ import com.example.user.fich.R;
 public class CardFragment extends Fragment {
 
     //private OnFragmentInteractionListener mListener;
+    PreferencesHelper prefHelper;
 
     public CardFragment() {
         // Required empty public constructor
@@ -41,6 +44,7 @@ public class CardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        prefHelper = new PreferencesHelper(getActivity());
         if (getArguments() != null) {
 
         }
@@ -51,7 +55,14 @@ public class CardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.e("GG","GGGGGGGGG~~~~~~~~~~~~~~~~~~~");
-        return inflater.inflate(R.layout.fragment_card, container, false);
+        View view = inflater.inflate(R.layout.fragment_card, container, false);
+
+        ((TextView)view.findViewById(R.id.textView5)).setText(prefHelper.getString(getResources().getString(R.string.name)));
+        ((TextView)view.findViewById(R.id.textView6)).setText(prefHelper.getString(getResources().getString(R.string.name)));
+        ((TextView)view.findViewById(R.id.textView7)).setText(prefHelper.getString(getResources().getString(R.string.birthday)));
+        ((TextView)view.findViewById(R.id.textView8)).setText(prefHelper.getString(getResources().getString(R.string.blood)));
+
+        return view;
     }
 
 

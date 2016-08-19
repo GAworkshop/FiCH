@@ -1,4 +1,4 @@
-package com.example.user.fich;
+package layout;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import com.example.user.fich.PreferencesHelper;
+import com.example.user.fich.R;
 
 import java.util.Calendar;
 
@@ -80,11 +83,12 @@ public class SetInfoActivity extends AppCompatActivity {
             return;
         }
 
-        prefHelpr.storeData("name", name);
-        prefHelpr.storeData("birthday", birthday);
-        prefHelpr.storeData("blood", blood);
-        prefHelpr.storeData("history", et_history.getText().toString());
-        prefHelpr.storeData("allergic", et_allergic.getText().toString());
+        prefHelpr.storeData(getResources().getString(R.string.name), name);
+        prefHelpr.storeData(getResources().getString(R.string.lbl_birthday), birthday);
+        prefHelpr.storeData(getResources().getString(R.string.lbl_blood), blood);
+        prefHelpr.storeData(getResources().getString(R.string.lbl_history), et_history.getText().toString());
+        prefHelpr.storeData(getResources().getString(R.string.lbl_allergic), et_allergic.getText().toString());
+        prefHelpr.storeData(getResources().getString(R.string.is_setting_done), true);
 
         this.finish();
     }

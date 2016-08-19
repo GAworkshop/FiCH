@@ -11,6 +11,8 @@
     android:id="@+id/frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
     <RelativeLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
@@ -36,6 +38,32 @@
             android:layout_height="match_parent"
             android:layout_below="@id/tabs"
             />
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/start_setting_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="您是手錶配戴者嗎?\n系統尚未有您的個人資料"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="前往設定"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="goInfoSetting"/>
+
+        </LinearLayout>
     </RelativeLayout>
 </FrameLayout>
 <!-- The navigation drawer -->
