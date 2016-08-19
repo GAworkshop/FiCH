@@ -22,6 +22,9 @@ import com.google.android.gms.wearable.Wearable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends Activity implements
         DataApi.DataListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -110,12 +113,13 @@ public class MainActivity extends Activity implements
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 // DataItem changed
                 DataItem item = event.getDataItem();
-                if (item.getUri().getPath().compareTo("/ga") == 0) {
+                if (item.getUri().getPath().compareTo("/hrData") == 0) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
-                    String [] s = dataMap.getString("ac_value").split(",");
-                    acXTxv.setText(s[0]);
-                    acYTxv.setText(s[1]);
-                    acZTxv.setText(s[2]);
+                    System.out.println("Heart rate data received : " + new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date(dataMap.getLong("time"))) + " " + dataMap.getDouble("recordHr"));
+                }else if (item.getUri().getPath().compareTo("/SosSignal") == 0) {
+                    for(int i=0;i<100;i++){
+                        System.out.println("SOS signal received !!!!! "+DataMapItem.fromDataItem(item).getDataMap().getInt("SOS"));
+                    }
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 // DataItem deleted
