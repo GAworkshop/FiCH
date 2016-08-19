@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <!-- alpha*2 rrggbb-->
+    <color name="titleColor">#FE8297</color>
+    <color name="drawerColor">#AAFFF49B</color>
+    <color name="drawerBackground">#FFFFFF</color>
+
+    <color name="color_ok">#4196ff</color>
 </resources>
