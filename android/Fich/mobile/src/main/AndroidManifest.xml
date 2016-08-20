@@ -23,9 +23,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".SearchableActivity"
             android:launchMode="singleTop"
@@ -46,6 +44,7 @@
             android:label="@string/title_activity_login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -71,7 +70,10 @@
 
         <activity
             android:name="layout.SetInfoActivity"
-            android:label="@string/title_activity_set_info"></activity>
+            android:label="@string/title_activity_set_info" />
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/title_activity_setting"></activity>
     </application>
 
 </manifest>

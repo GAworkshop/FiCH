@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
-    private String[] tab_titles = {"資訊卡", "緊急聯絡人", "個人資訊", "鄰近醫療單位", "逃生指引"};
+    private String[] tab_titles = {"醫療卡", "緊急聯絡人", "個人資訊", "鄰近醫療單位", "逃生指引"};
     private int[] tab_icons = {
             R.drawable.ic_card,
             R.drawable.ic_contact,
@@ -270,6 +270,9 @@ public class MainActivity extends AppCompatActivity {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(page_url));
                         startActivity(browserIntent);
                         break;
+                    case R.id.navigation_item_setting:
+                        Intent settingIntent = new Intent(MainActivity.this, SettingActivity.class);
+                        startActivity(settingIntent);
                     default:
                         mViewPager.setCurrentItem(item.getOrder());
                         break;

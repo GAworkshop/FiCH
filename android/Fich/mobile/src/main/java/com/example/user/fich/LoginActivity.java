@@ -88,7 +88,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //
+        // TODO: 2016/8/20 remove testing
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
         //

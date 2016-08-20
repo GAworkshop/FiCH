@@ -9,7 +9,7 @@
     <string name="search_title">搜尋</string>
     <string name="title_activity_login">Sign in</string>
 
-    <string name="Frag_Card">醫療資訊卡</string>
+    <string name="Frag_Card">醫療卡</string>
     <string name="Frag_Contact">緊急聯絡人</string>
     <string name="Frag_Info">個人資訊</string>
     <string name="Frag_Nearby">鄰近醫療單位</string>
@@ -121,4 +121,13 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_set_info">SetInfoActivity</string>
+    <string name="title_activity_setting">SettingActivity</string>
+
+    <string-array name="setting_period_dialog">
+        <item>5分鐘</item>
+        <item>10分鐘</item>
+        <item>20分鐘</item>
+        <item>30分鐘</item>
+        <item>60分鐘</item>
+    </string-array>
 </resources>

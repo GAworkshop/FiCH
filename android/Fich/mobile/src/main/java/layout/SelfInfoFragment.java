@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.user.fich.R;
 import com.github.mikephil.charting.charts.LineChart;
@@ -78,6 +80,20 @@ public class SelfInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_self_info, container, false);
 
+        ((Button)view.findViewById(R.id.btn_left)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollLeft(v);
+            }
+        });
+
+        view.findViewById(R.id.btn_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollRight(v);
+            }
+        });
+
         lineChart = (LineChart) view.findViewById(R.id.lineChart1);
 
         ArrayList<String> xAXES = new ArrayList<>();
@@ -110,6 +126,16 @@ public class SelfInfoFragment extends Fragment {
         lineChart.setVisibleXRangeMaximum(120);
 
         return view;
+    }
+
+    public void scrollRight(View view){
+        lineChart.scrollBy(5, lineChart.getScrollY());
+        Toast.makeText(getActivity(), "left", Toast.LENGTH_SHORT).show();
+    }
+
+    public void scrollLeft(View view){
+        lineChart.scrollBy(-5, lineChart.getScrollY());
+        Toast.makeText(getActivity(), "right", Toast.LENGTH_SHORT).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
