@@ -63,6 +63,6 @@ public class PreferencesHelper {
     }
 
     public Set<String> getStringSet(String key){
-        return getStringSet(key);
+        return pref.getStringSet(key, null);
     }
 }

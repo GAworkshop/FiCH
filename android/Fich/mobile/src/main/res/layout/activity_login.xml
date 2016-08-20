@@ -96,7 +96,23 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.35"
+                    android:layout_weight="0.2"
+                    android:text=" " />
+                <Button
+                    android:id="@+id/goToRegisBtn"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_marginTop="50dp"
+                    android:text="註冊"
+                    android:textStyle="bold"
+                    android:background="#FD5E79"
+                    android:textColor="@android:color/white" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
                     android:text=" " />
                 <Button
                     android:id="@+id/email_sign_in_button"
@@ -112,7 +128,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.35"
+                    android:layout_weight="0.2"
                     android:text=" " />
             </LinearLayout>
 

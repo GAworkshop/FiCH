@@ -6,13 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 /**
- * Created by huang on 2016/8/3.
+ * Created by huang on 2016/8/20.
  */
-public class MemberRequest {
-
+public class SensorRequest {
     DBconnect conn;
 
-    public MemberRequest(DBRequest request){
+    public SensorRequest(DBRequest request){
         conn = new DBconnect(request);
     }
 
@@ -27,7 +26,7 @@ public class MemberRequest {
                             Log.e("debugTTTT", "parse JSON Array");
                             arr = new JSONArray(result);
                             return arr;
-                                                        //implementation here................
+                            //implementation here................
                         }catch(JSONException e){
                             //returned value is not JSON, possibilly be a exit code
                             String code = "[false]";
@@ -51,7 +50,4 @@ public class MemberRequest {
 
         conn.execute();
     }
-
-
-
 }

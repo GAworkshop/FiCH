@@ -24,6 +24,8 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
@@ -36,7 +38,7 @@ public class LocService extends Service implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
     private final IBinder binder = new ServiceBinder();
-//    private static final String BROADCAST_LocData = "GAWorkShop.Fich.SendLocData";
+    //    private static final String BROADCAST_LocData = "GAWorkShop.Fich.SendLocData";
     private Timer timer; // 用來定時定位的Timer
     static final long taskDelay = 0; // 啟動Timer的延遲時間 : 立即
     private long taskPeriod = 300000; // Timer每次任務的間隔時間 : 300秒 **每決定一次位置用3個定位點平均的話間隔至少是90秒,平均數越多間隔要越長**
@@ -48,6 +50,7 @@ public class LocService extends Service implements
     static final int locateTimes = 3; // 決定一次位置要用 3 個定位點來平均
     private MySQLiteHelper helper;
     private GoogleApiClient mGoogleApiClient;
+    PreferencesHelper prefHelper;
 
     public class ServiceBinder extends Binder {
         LocService getService() {
@@ -98,10 +101,12 @@ public class LocService extends Service implements
         System.out.println("destroy the LocService");
         timer.cancel();
         timer = null;
-        try {
-            lm.removeUpdates(locListener);
-        }catch (SecurityException e){
+        if(lm != null) {
+            try {
+                lm.removeUpdates(locListener);
+            } catch (SecurityException e) {
 
+            }
         }
         if (helper != null) {
             helper.close();
@@ -187,10 +192,12 @@ public class LocService extends Service implements
         tempLongitude = 0;
         tempLatitude = 0;
         locateCount = 0;
-        try {
-            lm.removeUpdates(locListener);
-        }catch (SecurityException e){
+        if(lm != null) {
+            try {
+                lm.removeUpdates(locListener);
+            } catch (SecurityException e) {
 
+            }
         }
         timer.schedule(new TimerTask() {
             @Override
@@ -199,6 +206,13 @@ public class LocService extends Service implements
             }
         }, taskDelay, taskPeriod);
         System.out.println("已更改定時定位間隔時間為 " + minute + " 分鐘");
+    }
+
+    public void setHRPeriod(int minute){
+        PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/hrPeriod");
+        putDataMapRequest.getDataMap().putInt("hrPeriod", minute);
+        PutDataRequest putDataRequest = putDataMapRequest.asPutDataRequest();
+        Wearable.DataApi.putDataItem(mGoogleApiClient, putDataRequest);
     }
 
     @Override
@@ -238,9 +252,8 @@ public class LocService extends Service implements
                     System.out.println(hr.toString());
                     // 上傳至Server
                 }else if (item.getUri().getPath().compareTo("/SosSignal") == 0) {
-                    for(int i=0;i<10;i++){
-                        System.out.println("SOS signal received !!!!! "+DataMapItem.fromDataItem(item).getDataMap().getInt("SOS"));
-                    }
+                    startActivity(new Intent(this, SENDActivity.class));
+
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 // DataItem deleted

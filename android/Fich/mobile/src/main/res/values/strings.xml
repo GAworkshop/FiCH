@@ -14,6 +14,9 @@
     <string name="Frag_Info">個人資訊</string>
     <string name="Frag_Nearby">鄰近醫療單位</string>
     <string name="Frag_Escape">逃生指引</string>
+    <string name="feedback">給予回饋</string>
+    <string name="about">關於我們</string>
+    <string name="log_out">登出</string>
 
     <!-- info setting -->
     <string name="lbl_person_name">姓 名</string>
@@ -130,4 +133,5 @@
         <item>30分鐘</item>
         <item>60分鐘</item>
     </string-array>
+    <string name="title_activity_send">SENDActivity</string>
 </resources>

@@ -41,25 +41,24 @@
             android:id="@+id/navigation_item_feedback"
             android:icon="@drawable/ic_feedback"
             android:orderInCategory="5"
-            android:title="Send Feed Back"/>
+            android:title="@string/feedback"/>
         <item
             android:id="@+id/navigation_item_moreinfo"
             android:icon="@drawable/ic_cloud"
             android:orderInCategory="6"
-            android:title="more Info"/>
-
+            android:title="@string/about"/>
 
     </group>
 
     <group
         android:checkableBehavior="single"
         android:id="@+id/menu_setting">
-
         <item
             android:id="@+id/navigation_item_setting"
             android:icon="@drawable/ic_setting_dark"
             android:orderInCategory="7"
             android:title="@string/action_settings"/>
+
 
     </group>
 </menu>

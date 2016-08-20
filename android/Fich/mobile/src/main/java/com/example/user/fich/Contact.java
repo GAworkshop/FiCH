@@ -49,4 +49,8 @@ public class Contact {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public String getStoreData(){
+        return name + "%" + phone;
+    }
 }

@@ -50,7 +50,11 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
@@ -204,7 +208,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     @Override
                     public void run() {
                         sensorManager.registerListener(Engine.this, hrSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                        System.out.println("Test screen off heart rate ");
+                        System.out.println("Start recording heart rate ");
                     }
                 },10000,hrPeriod*60000);
             }
@@ -442,6 +446,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onConnected(@Nullable Bundle bundle) {
+            Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
             Toast.makeText(MyWatchFace.this, "已連線", Toast.LENGTH_LONG).show();
         }
 
@@ -473,7 +478,34 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onDataChanged(DataEventBuffer dataEventBuffer) {
-
+            for (DataEvent event : dataEventBuffer) {
+                if (event.getType() == DataEvent.TYPE_CHANGED) {
+                    // DataItem changed
+                    DataItem item = event.getDataItem();
+                    if (item.getUri().getPath().compareTo("/hrPeriod") == 0) {
+                        DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                        int period = dataMap.getInt("hrPeriod");
+                        if(hrSensor != null) {
+                            sensorManager.unregisterListener(this, hrSensor);
+                            hrTimer.cancel();
+                            hrTimer = new Timer();
+                            hrCount = 0;
+                            tempHr = 0;
+                            hrPeriod = period;
+                            hrTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    sensorManager.registerListener(Engine.this, hrSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                                    System.out.println("Start recording heart rate ");
+                                }
+                            },10000,hrPeriod*60000);
+                            System.out.println("Set heart rate recording period to "+period+" minutes");
+                        }
+                    }
+                } else if (event.getType() == DataEvent.TYPE_DELETED) {
+                    // DataItem deleted
+                }
+            }
         }
 
         int hrCount = 0;
@@ -484,7 +516,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             if(sensor.getType() == Sensor.TYPE_ACCELEROMETER){
                 //sendData("ac_value", event.values[0] + "," + event.values[1] + "," + event.values[2]);
                 //System.out.println("ac value : "+event.values[0] + "," + event.values[1] + "," + event.values[2]);
-                if(Math.abs(event.values[0])+Math.abs(event.values[1])+Math.abs(event.values[2]) >= 32){
+                if(Math.abs(event.values[0])+Math.abs(event.values[1])+Math.abs(event.values[2]) >= 40){
                     System.out.println("ac value : "+event.values[0] + "," + event.values[1] + "," + event.values[2]);
                     if(!timerActive){
                         detect();

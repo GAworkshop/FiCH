@@ -3,83 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/img_photo"
-            android:layout_margin="10dp"
-            android:layout_weight="1"/>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="NAME"
-                android:id="@+id/tv_name"
-                android:textAlignment="center"
-                android:layout_marginTop="20dp"
-                android:padding="10dp"/>
-
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SET NAME"
-                        android:id="@+id/button"
-                        android:layout_weight="1"/>
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SET PHONE"
-                        android:id="@+id/button2"
-                        android:layout_weight="1"/>
-
-                </TableRow>
-
-                <TableRow>
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SET PIC"
-                        android:id="@+id/button3"
-                        android:layout_weight="1"/>
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="DELETE"
-                        android:id="@+id/button4"
-                        android:layout_column="1"
-                        android:layout_weight="1"/>
-                </TableRow>
-
-            </TableLayout>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="NAME"
+        android:id="@+id/tv_name"
+        android:textAlignment="center"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -88,5 +20,25 @@
         android:text="PHONE NUMBER"
         android:id="@+id/tv_phone"
         android:layout_margin="10dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="設定"
+            android:id="@+id/button"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="刪除"
+            android:id="@+id/button4"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
 </LinearLayout>

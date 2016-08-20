@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -88,10 +87,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: 2016/8/20 remove testing
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        finish();
-        //
+
         setContentView(R.layout.activity_login);
 
         prefHelpr = new PreferencesHelper(this);
@@ -123,6 +119,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        Button goToRegisBtn = (Button)findViewById(R.id.goToRegisBtn);
+        goToRegisBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
 
     }
 
@@ -187,7 +191,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -243,26 +247,57 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         showProgress(false);
                         Log.e("debugTTTT", "onFinish");
                         Log.e("debugTTTT", ""+jsonArray.toString());
-                        if (jsonArray.getBoolean(0)) {
-                            Log.e("debugTTTT", "yes");
-                            Toast.makeText(LoginActivity.this, "User Logged In!!", Toast.LENGTH_SHORT);
-                            prefHelpr.storeData("isLogin", true);
-                            //prefEdit.putBoolean("isLogin", true);
-                            //prefEdit.commit();
-                            //finish();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
-                        } else {
-                            Log.e("debugTTTT", "no");
-                            mPasswordView.setError(getString(R.string.error_incorrect_password));
-                            mPasswordView.requestFocus();
-                            Toast.makeText(LoginActivity.this, "User Logged FAIL!!", Toast.LENGTH_SHORT);
-                            prefHelpr.storeData("isLogin", false);
-                            //prefEdit.putBoolean("isLogin", false);
-                            //prefEdit.commit();
+                        try {
+                            if (!jsonArray.getBoolean(0)) {
+                                Log.e("debugTTTT", "yes");
+                                Toast.makeText(LoginActivity.this, "User Logged In!!", Toast.LENGTH_SHORT);
+                                prefHelpr.storeData("isLogin", true);
+                                prefHelpr.storeData(getResources().getString(R.string.UID), jsonArray.getInt(0));
+                                prefHelpr.storeData(getResources().getString(R.string.name), jsonArray.getInt(4));
+                                prefHelpr.storeData(getResources().getString(R.string.birthday), jsonArray.getInt(5));
+                                prefHelpr.storeData(getResources().getString(R.string.history), jsonArray.getInt(6));
+                                prefHelpr.storeData(getResources().getString(R.string.allergic), jsonArray.getInt(7));
+
+                                //prefEdit.putBoolean("isLogin", true);
+                                //prefEdit.commit();
+                                //finish();
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                Log.e("TESTTEST","ADSASDASDASDASD");
+                                finish();
+                            } else {
+                                Log.e("debugTTTT", "no");
+                                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                                mPasswordView.requestFocus();
+                                Toast.makeText(LoginActivity.this, "User Logged FAIL!!", Toast.LENGTH_SHORT);
+                                prefHelpr.storeData("isLogin", false);
+                                //prefEdit.putBoolean("isLogin", false);
+                                //prefEdit.commit();
+                            }
+                        }catch(Exception e){
+                            try {
+                                Log.e("debugTTTT", "yes2");
+                                //Toast.makeText(LoginActivity.this, "User Logged In!!", Toast.LENGTH_SHORT);
+                                prefHelpr.storeData("isLogin", true);
+//                                prefHelpr.storeData(getResources().getString(R.string.UID), jsonArray.getInt(0));
+//                                prefHelpr.storeData(getResources().getString(R.string.name), jsonArray.getString(4));
+//                                prefHelpr.storeData(getResources().getString(R.string.birthday), jsonArray.getString(5));
+//                                prefHelpr.storeData(getResources().getString(R.string.history), jsonArray.getString(6));
+//                                prefHelpr.storeData(getResources().getString(R.string.allergic), jsonArray.getString(7));
+
+                                Log.e("", "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                                //prefEdit.putBoolean("isLogin", true);
+                                //prefEdit.commit();
+                                //finish();
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                Log.e("TESTTEST", "ADSASDASDASDASD");
+                                finish();
+                            }catch (Exception e1){
+
+                            }
                         }
-                    }catch (JSONException e){
-                        e.printStackTrace();
+
+                    }finally {
+
                     }
                 }
             });

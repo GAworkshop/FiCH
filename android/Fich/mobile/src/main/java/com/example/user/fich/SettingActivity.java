@@ -22,6 +22,7 @@ public class SettingActivity extends Activity {
     ListView lv;
     int period = 5;
     private LocService locService;
+    int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +35,16 @@ public class SettingActivity extends Activity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0) {
+                if(position == 0 || position == 1) {        // the selected item of setting listview
+                    String title = "";                      // position 0 : Location Recording Period
+                    if(position == 0){                      // position 1 : Heart Rate Recording Period
+                        title = "選擇每隔多少時間存取位置資訊";
+                    }else if(position == 1){
+                        title = "選擇每隔多少分鐘存取心律資訊";
+                    }
+                    pos = position;
                     new AlertDialog.Builder(SettingActivity.this)
-                            .setTitle("選擇每隔多少時間存取位置資訊")
+                            .setTitle(title)
                             .setItems(R.array.setting_period_dialog, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -61,9 +69,17 @@ public class SettingActivity extends Activity {
                                         @Override
                                         public void onServiceConnected(ComponentName name, IBinder binder) {
                                             locService = ((LocService.ServiceBinder) binder).getService();
-                                            locService.setTaskPeriod(period); // 帶入Int整數型態 : ?分鐘 不宜太少(1or2)
+                                            if(pos == 0) {
+                                                locService.setTaskPeriod(period);
+                                            }else if(pos == 1){
+                                                locService.setHRPeriod(period);
+                                            }
                                             unbindService(this);
-                                            Toast.makeText(SettingActivity.this, "已更改定位間隔時間為 " + period + " 分鐘", Toast.LENGTH_LONG).show();
+                                            if(pos == 0){
+                                                Toast.makeText(SettingActivity.this, "已更改定位間隔時間為 " + period + " 分鐘", Toast.LENGTH_LONG).show();
+                                            }else if(pos == 1){
+                                                Toast.makeText(SettingActivity.this, "已更改心律間隔時間為 " + period + " 分鐘", Toast.LENGTH_LONG).show();
+                                            }
                                         }
                                         @Override
                                         public void onServiceDisconnected(ComponentName name) {
@@ -72,32 +88,6 @@ public class SettingActivity extends Activity {
                                     };
                                     Intent intent = new Intent(SettingActivity.this, LocService.class);
                                     bindService(intent, setTaskPeriodLocServiceCon, Context.BIND_AUTO_CREATE);
-                                }
-                            }).show();
-                }else if(position == 1){
-                    new AlertDialog.Builder(SettingActivity.this)
-                            .setTitle("選擇每隔多少時間存取位置資訊")
-                            .setItems(R.array.setting_period_dialog, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (which){
-                                        case 0:
-                                            period = 5;
-                                            break;
-                                        case 1:
-                                            period = 10;
-                                            break;
-                                        case 2:
-                                            period = 20;
-                                            break;
-                                        case 3:
-                                            period = 30;
-                                            break;
-                                        case 4:
-                                            period = 60;
-                                            break;
-                                    }
-                                    //改心律方法
                                 }
                             }).show();
                 }

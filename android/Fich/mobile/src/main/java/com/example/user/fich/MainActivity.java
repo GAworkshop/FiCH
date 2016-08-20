@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tx, ty, tz;
     Toast toast;
 
-    private static final String page_url = "http://140.115.207.72/test.html";
+    private static final String page_url = "http://140.115.207.72/fich/FE/index.html";
 
     PreferencesHelper prefHelpr;
 
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         }, mSensor, SensorManager.SENSOR_DELAY_GAME);*/
 
         // 測試別項功能中,暫時關閉
-        //startService(new Intent(this, LocService.class));
+        startService(new Intent(this, LocService.class));
 
 
     }
@@ -273,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_item_setting:
                         Intent settingIntent = new Intent(MainActivity.this, SettingActivity.class);
                         startActivity(settingIntent);
+                        break;
                     default:
                         mViewPager.setCurrentItem(item.getOrder());
                         break;
