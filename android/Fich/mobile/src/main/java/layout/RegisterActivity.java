@@ -1,4 +1,4 @@
-package com.example.user.fich;
+package layout;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -6,6 +6,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.user.fich.Action;
+import com.example.user.fich.DBRequest;
+import com.example.user.fich.DataCallback;
+import com.example.user.fich.MemberRequest;
+import com.example.user.fich.R;
+
+import org.json.JSONArray;
 
 public class RegisterActivity extends Activity {
     String email;
@@ -44,7 +52,23 @@ public class RegisterActivity extends Activity {
                 }else if(phone.length() == 0){
                     phone_et.setError(getString(R.string.error_field_required));
                 }else{
+                    DBRequest dbRequest = new DBRequest(Action.CREATE_USER);
+                    dbRequest.setPair("name",email);
+                    dbRequest.setPair("pass", password);
+                    dbRequest.setPair("phone", phone);
+                    MemberRequest m = new MemberRequest(dbRequest);
+                    m.execute(new DataCallback() {
+                        @Override
+                        public void onFinish(JSONArray jsonArray) {
 
+                            if(jsonArray.optBoolean(0)){
+                                //things to do when add user success
+
+                            }else {
+                                //things to do when fail
+                            }
+                        }
+                    });
                 }
             }
         });

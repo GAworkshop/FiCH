@@ -45,7 +45,7 @@
 	$login  = 'login';
 
 /*
-	$_POST['action'] = $create;
+	$_POST['action'] = $login;
 	$name = $_POST['name'] = 'n3@nn.nn';
 	$pass = $_POST['pass'] = 'pppp';
 	$phone = $_POST['phone'] = '011111111';
@@ -92,6 +92,7 @@
 			$t->insert('INSERT INTO `member` (`user_name`, `user_pass`, `phone`) VALUES ("'.$name.'", "'.$pass.'", "'.$phone.'");');
 			$last_id = mysql_insert_id();
 			createUserTable($id);
+			exitCode(300);
 		}
 
 	}
@@ -106,12 +107,12 @@
 
 	function selectUser(){
 		global $t;
-		if(!$_POST['id']){
+		if($_POST['id']){
 			$id = $_POST['id'];
 			echo $t->queryJSON('SELECT * From `member` WHERE `id` = "'.$id.'";');
 			return;
 		}
-		if(!$_POST['name']){
+		if($_POST['name']){
 			$name = $_POST['name'];
 			if($name == "*"){
 				echo $t->queryJSON('SELECT * From `member`;');
@@ -133,7 +134,8 @@
 
 
 		if($result >= 1){
-			exitCode(200);
+			echo $t ->queryJSON('SELECT * FROM `member` WHERE `user_name` = "' . $name . '" AND `user_pass` = "' .$pass. '";');
+			die();
 		}
 
 		exitCode(201);
@@ -145,10 +147,10 @@
 		global $t;
 		$result = $t->count('SELECT count(*) FROM `member` WHERE `user_name` = "'.$name.'";');
 		if($result >= 1){
-			echo "existed<br>";
+			//echo "existed<br>";
 			return true;
 		}
-		echo "free<br>";
+		//echo "free<br>";
 		return false;
 	}
 

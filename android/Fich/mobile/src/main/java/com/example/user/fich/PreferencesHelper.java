@@ -1,6 +1,5 @@
 package com.example.user.fich;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -16,8 +15,8 @@ public class PreferencesHelper {
     SharedPreferences pref;
     SharedPreferences.Editor prefEdit;
 
-    public PreferencesHelper(Activity activity){
-        pref = activity.getApplication().getSharedPreferences(file, Context.MODE_PRIVATE);
+    public PreferencesHelper(Context context){
+        pref = context.getSharedPreferences(file, Context.MODE_PRIVATE);
         prefEdit = pref.edit();
     }
 

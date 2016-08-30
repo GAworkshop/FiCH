@@ -1,21 +1,33 @@
 package layout;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.user.fich.Contact;
 import com.example.user.fich.PreferencesHelper;
 import com.example.user.fich.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,25 +39,15 @@ import java.util.ArrayList;
  */
 public class ContactFragment extends Fragment {
 
-    //private OnFragmentInteractionListener mListener;
-    private ExpandableListView expListView;
-
-    private static final String contact = "contact";
-    private static final int IMAGE_PICKER = 1;
-    private int lastExp = -1;
-    public View targetView;
-    static final int PICK_CONTACT_REQUEST = 1;
     PreferencesHelper prefHelper;
-
     ArrayList<Contact> contact_list = new ArrayList<Contact>();
-    Contact c1;
-    Contact c2;
-    Contact c3;
+    ListView contactListView;
+    static final int PICK_CONTACT_REQUEST = 100;
+    ContactAdapter contactAdapter;
 
     public ContactFragment() {
         // Required empty public constructor
     }
-
 
     public static ContactFragment newInstance(String param1, String param2) {
         Log.e("~~DEBUG~~", "Contact Fragment newInstance");
@@ -61,13 +63,7 @@ public class ContactFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e("~~DEBUG~~", "Contact Fragment onCreate");
-        //contact_list.add(new Contact(0, BitmapFactory.decodeResource(getResources(), R.drawable.head_me),"Ben", "123456789"));
-        //contact_list.add(new Contact(1, BitmapFactory.decodeResource(getResources(), R.drawable.head_me),"Huang", "000000000"));
-        //contact_list.add(new Contact(2, BitmapFactory.decodeResource(getResources(), R.drawable.head_me),"Huang", "111111111"));
-
         prefHelper = new PreferencesHelper(getActivity());
-
-        return;
     }
 
     @Override
@@ -76,22 +72,120 @@ public class ContactFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.e("~~DEBUG~~", "Contact Fragment onCreateView");
 
-
+        HashSet<String> hs = (HashSet<String>)prefHelper.getStringSet("contactList");
+        if(hs != null) {
+            ArrayList<Contact> al = new ArrayList<>();
+            Iterator<String> iter = hs.iterator();
+            while (iter.hasNext()) {
+                String[] c = iter.next().split(",");
+                al.add(new Contact(c[0], c[1]));
+            }
+            contact_list = al;
+        }
 
         final View view = inflater.inflate(R.layout.fragment_contact, container, false);
+        contactListView = (ListView)view.findViewById(R.id.contactListView);
+        contactAdapter = new ContactAdapter(getActivity());
+        contactListView.setAdapter(contactAdapter);
 
-        view.findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
+        contactListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("刪除聯絡人")
+                        .setMessage("確定要刪除聯絡人 " + contact_list.get(position).getName() + " 嗎")
+                        .setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                contact_list.remove(position);
+                                contactAdapter.notifyDataSetChanged();
+                                resaveContactList();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+
+                return false;
+            }
+        });
+
+        Button contactAddBtn = (Button)view.findViewById(R.id.contactAddBtn);
+        contactAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(contact_list.size()<3) {
+                    Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
+                    pickContactIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                    startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
+                }else{
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("很抱歉!")
+                            .setMessage("聯絡人數量已達上限")
+                            .setPositiveButton("確認", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                String name = ((TextView)view.findViewById(R.id.editText)).getText().toString();
-                String phone = ((TextView)view.findViewById(R.id.editText2)).getText().toString();
-                prefHelper.storeData("c_name", name);
-                prefHelper.storeData("c_phone", phone);
+                                }
+                            })
+                            .show();
+                }
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request it is that we're responding to
+        if (requestCode == PICK_CONTACT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                // Get the URI that points to the selected contact
+                Uri contactUri = data.getData();
+                // We only need the NUMBER column, because there will be only one row in the result
+                String[] projection = {ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME};
+
+                // Perform the query on the contact to get the NUMBER column
+                // We don't need a selection or sort order (there's only one result for the given URI)
+                // CAUTION: The query() method should be called from a separate thread to avoid blocking
+                // your app's UI thread. (For simplicity of the sample, this code doesn't do that.)
+                // Consider using CursorLoader to perform the query.
+                Cursor cursor = getActivity().getContentResolver()
+                        .query(contactUri, projection, null, null, null);
+                cursor.moveToFirst();
+
+                // Retrieve the phone number from the NUMBER column
+                int column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                String phone = cursor.getString(column);
+                column = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                String name = cursor.getString(column);
+                // Do something with the phone number...
+                for(Contact c:contact_list){
+                    if(phone.equals(c.getPhone())){
+                        Toast.makeText(getActivity(), "聯絡人電話重複", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                contact_list.add(new Contact(name, phone));
+                contactAdapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(), "新增聯絡人成功", Toast.LENGTH_SHORT).show();
+                resaveContactList();
+            }
+        }
+    }
+
+    public void resaveContactList(){
+        HashSet<String> hs = new HashSet<>();
+        for(Contact c:contact_list){
+            hs.add(c.getName()+","+c.getPhone());
+        }
+        prefHelper.storeData("contactList",hs);
     }
 
     @Override
@@ -137,5 +231,42 @@ public class ContactFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    private class ContactAdapter extends BaseAdapter{
+        private LayoutInflater layoutInflater;
+
+        public ContactAdapter(Context context){
+            layoutInflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public int getCount() {
+            return contact_list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return contact_list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return contact_list.get(position).getId();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = layoutInflater.inflate(R.layout.contactlistview_item, parent, false);
+            }
+
+            Contact contact = contact_list.get(position);
+            TextView nameTv = (TextView)convertView.findViewById(R.id.contactNameTv);
+            nameTv.setText(contact.getName());
+            TextView phoneTv = (TextView)convertView.findViewById(R.id.contactPhoneTv);
+            phoneTv.setText(contact.getPhone());
+
+            return convertView;
+        }
+    }
 
 }

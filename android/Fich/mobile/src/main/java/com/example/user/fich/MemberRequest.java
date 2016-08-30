@@ -24,19 +24,22 @@ public class MemberRequest {
                         Log.e("debugTTTT", "parse Start!");
                         JSONArray arr = new JSONArray();
                         try{
-                            Log.e("debugTTTT", "parse JSON Array");
+                            Log.e("debugTTTT", "parse JSON Array " + result);
                             arr = new JSONArray(result);
                             return arr;
                                                         //implementation here................
                         }catch(JSONException e){
                             //returned value is not JSON, possibilly be a exit code
+                            //by default, its returned value will be false
                             String code = "[false]";
                             Log.e("debugTTTT", "parse JSON Array Fail~");
                             Log.e("debugTTTT", result);
 
-//                            if(result.equals("200")){
-//                                code = "[true]";
-//                            }
+                            //if returnde a code, and it means true, then put it here and returned true
+
+                            if(result.equals("300")){
+                                code = "[true]";
+                            }
 
                             try {
                                 return new JSONArray(code);

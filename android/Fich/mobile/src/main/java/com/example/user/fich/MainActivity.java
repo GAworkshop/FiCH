@@ -74,30 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //System.out.println("GGGGGGGGGGGGGG");
-        /*
-        DBRequest dbRequest = new DBRequest(Action.SENSOR_SELECT);
-        dbRequest.setPair("newest","5");
-        MemberRequest m = new MemberRequest(dbRequest);
-        m.execute(new DataCallback() {
-            @Override
-            public void onFinish(JSONArray jsonArray) {
-                try {
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        Log.v(i+"", jsonArray.get(i).toString());
 
-                        for (int j = 0; j < jsonArray.getJSONArray(i).length(); j++) {
-                            //Log.e("(" + i + "," + j + ")", "" + jsonArray.getJSONArray(i).get(j).toString());
-                        }
-
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-
-            }
-        });
-*/
         //startActivity(new Intent(MainActivity.this, SetInfoActivity.class));
         //startActivity(new Intent(MainActivity.this, LoginActivity.class));
         //startActivity(new Intent(MainActivity.this, SettingsActivity.class));
@@ -215,8 +192,6 @@ public class MainActivity extends AppCompatActivity {
             mTabs.getTabAt(i).setCustomView(v);
 
 
-
-            //mTabs.getTabAt(i).setIcon(tab_icons[i]);
         }
 /*
         mTabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -306,11 +281,11 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return ContactFragment.newInstance("", "");
                 case 2:
-                    return new SelfInfoFragment().newInstance("", "");
+                    return SelfInfoFragment.newInstance("", "");
                 case 3:
                     return MapFragment.newInstance("", "");
                 case 4:
-                    return new EscapeFragment().newInstance("", "");
+                    return EscapeFragment.newInstance("", "");
                 default:
                     return new Fragment();
             }
