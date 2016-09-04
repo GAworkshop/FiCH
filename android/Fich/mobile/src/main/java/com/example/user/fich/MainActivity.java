@@ -290,22 +290,12 @@ public class MainActivity extends AppCompatActivity {
                     return new Fragment();
             }
 
-            /*
-            if(position == 0)
-                return ContactFragment.newInstance("","");
-            else
-                return new Fragment();
-            */
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            //return null;
             return tab_titles[position];
         }
-
-
-
 
     }
 
@@ -358,6 +348,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.e("~~DEBUG~~", "main onResume");
         Toast.makeText(this,""+prefHelpr.getString("name"), Toast.LENGTH_SHORT).show();
+
+        //if info hasn't been set, show the default page, else show main page.
         if(prefHelpr.getBoolean(getResources().getString(R.string.is_setting_done))){
             findViewById(R.id.tabs).setVisibility(View.VISIBLE);
             findViewById(R.id.viewpager).setVisibility(View.VISIBLE);

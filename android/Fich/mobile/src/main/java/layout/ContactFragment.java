@@ -27,7 +27,6 @@ import com.example.user.fich.R;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,16 +71,7 @@ public class ContactFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.e("~~DEBUG~~", "Contact Fragment onCreateView");
 
-        HashSet<String> hs = (HashSet<String>)prefHelper.getStringSet("contactList");
-        if(hs != null) {
-            ArrayList<Contact> al = new ArrayList<>();
-            Iterator<String> iter = hs.iterator();
-            while (iter.hasNext()) {
-                String[] c = iter.next().split(",");
-                al.add(new Contact(c[0], c[1]));
-            }
-            contact_list = al;
-        }
+        contact_list = prefHelper.getContactList();
 
         final View view = inflater.inflate(R.layout.fragment_contact, container, false);
         contactListView = (ListView)view.findViewById(R.id.contactListView);

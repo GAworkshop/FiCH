@@ -84,10 +84,10 @@ public class SetInfoActivity extends AppCompatActivity {
         }
 
         prefHelpr.storeData(getResources().getString(R.string.name), name);
-        prefHelpr.storeData(getResources().getString(R.string.lbl_birthday), birthday);
-        prefHelpr.storeData(getResources().getString(R.string.lbl_blood), blood);
-        prefHelpr.storeData(getResources().getString(R.string.lbl_history), et_history.getText().toString());
-        prefHelpr.storeData(getResources().getString(R.string.lbl_allergic), et_allergic.getText().toString());
+        prefHelpr.storeData(getResources().getString(R.string.birthday), birthday);
+        prefHelpr.storeData(getResources().getString(R.string.blood), blood);
+        prefHelpr.storeData(getResources().getString(R.string.history), et_history.getText().toString());
+        prefHelpr.storeData(getResources().getString(R.string.allergic), et_allergic.getText().toString());
         prefHelpr.storeData(getResources().getString(R.string.is_setting_done), true);
 
         this.finish();

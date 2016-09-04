@@ -3,6 +3,9 @@ package com.example.user.fich;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -63,5 +66,19 @@ public class PreferencesHelper {
 
     public Set<String> getStringSet(String key){
         return pref.getStringSet(key, null);
+    }
+
+    public ArrayList<Contact> getContactList(){
+        HashSet<String> hs = (HashSet<String>)getStringSet("contactList");
+        if(hs != null) {
+            ArrayList<Contact> al = new ArrayList<>();
+            Iterator<String> iter = hs.iterator();
+            while (iter.hasNext()) {
+                String[] c = iter.next().split(",");
+                al.add(new Contact(c[0], c[1]));
+            }
+            return al;
+        }
+        return new ArrayList<>();
     }
 }

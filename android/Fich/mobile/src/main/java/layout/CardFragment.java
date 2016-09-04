@@ -25,6 +25,7 @@ public class CardFragment extends Fragment {
 
     //private OnFragmentInteractionListener mListener;
     PreferencesHelper prefHelper;
+    View view;
 
     public CardFragment() {
         // Required empty public constructor
@@ -55,14 +56,30 @@ public class CardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.e("GG","GGGGGGGGG~~~~~~~~~~~~~~~~~~~");
-        View view = inflater.inflate(R.layout.fragment_card, container, false);
+        view = inflater.inflate(R.layout.fragment_card, container, false);
 
         ((TextView)view.findViewById(R.id.textView5)).setText(prefHelper.getString(getResources().getString(R.string.name)));
         ((TextView)view.findViewById(R.id.textView6)).setText(prefHelper.getString(getResources().getString(R.string.name)));
         ((TextView)view.findViewById(R.id.textView7)).setText(prefHelper.getString(getResources().getString(R.string.birthday)));
         ((TextView)view.findViewById(R.id.textView8)).setText(prefHelper.getString(getResources().getString(R.string.blood)));
 
+        ((TextView)view.findViewById(R.id.tv_history)).setText(prefHelper.getString(getResources().getString(R.string.history)));
+        ((TextView)view.findViewById(R.id.tv_allergic)).setText(prefHelper.getString(getResources().getString(R.string.allergic)));
+
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        ((TextView)view.findViewById(R.id.textView5)).setText(prefHelper.getString(getResources().getString(R.string.name)));
+        ((TextView)view.findViewById(R.id.textView6)).setText(prefHelper.getString(getResources().getString(R.string.name)));
+        ((TextView)view.findViewById(R.id.textView7)).setText(prefHelper.getString(getResources().getString(R.string.birthday)));
+        ((TextView)view.findViewById(R.id.textView8)).setText(prefHelper.getString(getResources().getString(R.string.blood)));
+
+        ((TextView)view.findViewById(R.id.tv_history)).setText(prefHelper.getString(getResources().getString(R.string.history)));
+        ((TextView)view.findViewById(R.id.tv_allergic)).setText(prefHelper.getString(getResources().getString(R.string.allergic)));
     }
 
 

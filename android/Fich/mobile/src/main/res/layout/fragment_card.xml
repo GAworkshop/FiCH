@@ -131,7 +131,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/history_hint"
-            android:id="@+id/textView12" />
+            android:id="@+id/tv_history" />
 
 
     </LinearLayout>
@@ -149,7 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="1\n\n\n\n\n\n2\n3\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n5\n"
+            android:text="@string/lbl_allergic"
             android:id="@+id/textView13" />
 
         <TextView
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/allergic_hint"
-            android:id="@+id/textView14" />
+            android:id="@+id/tv_allergic" />
 
 
     </LinearLayout>

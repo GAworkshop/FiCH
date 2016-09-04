@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.user.fich.Action;
 import com.example.user.fich.DBRequest;
@@ -63,9 +64,12 @@ public class RegisterActivity extends Activity {
 
                             if(jsonArray.optBoolean(0)){
                                 //things to do when add user success
+                                Toast.makeText(RegisterActivity.this, "SUCCESS!!", Toast.LENGTH_SHORT).show();
+                                finish();
 
                             }else {
                                 //things to do when fail
+                                Toast.makeText(RegisterActivity.this, "User name already exists.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

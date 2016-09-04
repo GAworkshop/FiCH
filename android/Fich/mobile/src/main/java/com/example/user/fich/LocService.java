@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.telephony.SmsManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -29,6 +30,7 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -65,6 +67,7 @@ public class LocService extends Service implements
         if (helper == null) {
             helper = new MySQLiteHelper(this);
         }
+        prefHelper = new PreferencesHelper(getApplicationContext());
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -252,8 +255,13 @@ public class LocService extends Service implements
                     System.out.println(hr.toString());
                     // 上傳至Server
                 }else if (item.getUri().getPath().compareTo("/SosSignal") == 0) {
-                    startActivity(new Intent(this, SENDActivity.class));
-
+                    ArrayList<Contact> al = prefHelper.getContactList();
+                    SmsManager sms = SmsManager.getDefault();
+                    String text = "HELP!!!";
+                    for(Contact c:al){
+                        String number = c.getPhone();
+                        sms.sendTextMessage(number, null, text, null, null);
+                    }
                 }
             } else if (event.getType() == DataEvent.TYPE_DELETED) {
                 // DataItem deleted
