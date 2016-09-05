@@ -6,6 +6,9 @@
 			"create" : create a record
 			"select" : return data
 
+		id :
+			insert or select under a given id
+
 		"data" :
 			data in JSON format
 			ex:

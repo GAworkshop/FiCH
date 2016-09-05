@@ -1,13 +1,20 @@
 package layout;
 
+import android.app.Activity;
 import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.user.fich.DataService;
 import com.example.user.fich.MyLocation;
@@ -19,9 +26,24 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,7 +67,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private String mParam1;
     private String mParam2;
     private MapView mapView;
-
+    private LocationManager lm;
+    MyLocListener myLocListener;
 
     private MySQLiteHelper helper;
 
@@ -100,10 +123,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         Log.e("~~DEBUG~~", "map onCreateView");
         // 抓資料 待測試
-        locList = helper.getList();
-        for(MyLocation m:locList){
-            System.out.println(m.toString());
-        }
+//        locList = helper.getList();
+//        for(MyLocation m:locList){
+//            System.out.println(m.toString());
+//        }
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         mapView = (MapView) rootView.findViewById(R.id.map);
 
@@ -136,6 +159,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         super.onPause();
         Log.e("~~DEBUG~~", "map onPause");
         mapView.onPause();
+        try {
+            lm.removeUpdates(myLocListener);
+        }catch (SecurityException e){
+
+        }
     }
 
     @Override
@@ -180,12 +208,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         Log.e("~~DEBUG~~", "map onMapReady");
         mMap = googleMap;
-        LatLng latlng =null;
         try {
             mMap.setMyLocationEnabled(true);
         }catch (SecurityException e){
 
         }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(23.8246732,121.0472636)));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(8));
+        /*LatLng latlng =null;
         for(MyLocation loc:locList){
 
             latlng = new LatLng(loc.getLatitude(),loc.getLongitude());
@@ -197,6 +227,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }else{
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
             mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        }*/
+        myLocListener = new MyLocListener();
+        lm = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
+        String bestProvider = lm.getBestProvider(new Criteria(), true); // 取得最佳的定位提供者
+        if (bestProvider.equals("gps") || bestProvider.equals("network")) { // 有開定位
+            System.out.println("MyLocation : On , the locating provider is " + bestProvider);
+            try {
+                lm.requestLocationUpdates(bestProvider, 300000, 0, myLocListener);
+            }catch (SecurityException e){
+
+            }
+            Toast.makeText(getActivity(), "定位中", Toast.LENGTH_LONG).show();
+        } else { // 沒開定位,傳送通知提醒
+            Toast.makeText(getActivity(), "定位服務未開啟 , 無法使用鄰近醫療單位功能", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -213,5 +257,268 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public class MyLocListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+            String str="尋找附近醫療資源 - 定位中\n";
+            str+= "定位提供者:"+location.getProvider()+"\n";
+            str+= String.format("經度:%.6f\n緯度:%.6f\n時間:%s\n",
+                    location.getLongitude(),	// 經度
+                    location.getLatitude(),		// 緯度
+                    new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date(location.getTime()))); // 時間
+            str+= "--------------------";
+            System.out.println(str);
+            new PlacesTask().execute(searchReq(location.getLatitude(), location.getLongitude()));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    }
+
+    public String searchReq(double mLatitude, double mLongitude) {
+
+        //use your current location here
+        //double mLatitude = 24.9694856;
+        //double mLongitude = 121.1903276;
+
+        StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        sb.append("location=" + mLatitude + "," + mLongitude);
+        sb.append("&radius=5000");
+        sb.append("&types=" + "hospital");
+        sb.append("&sensor=true");
+        sb.append("&key=AIzaSyBke1_igYVgoZ77uxBo0zKpI8CSGKy8-KE");
+        sb.append("&language=zh-TW");
+
+        Log.d("Map", "api: " + sb.toString());
+
+        return sb.toString();
+    }
+
+    private class PlacesTask extends AsyncTask<String, Integer, String> {
+
+        String data = null;
+
+        // Invoked by execute() method of this object
+        @Override
+        protected String doInBackground(String... url) {
+            try {
+                data = downloadUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        // Executed after the complete execution of doInBackground() method
+        @Override
+        protected void onPostExecute(String result) {
+            ParserTask parserTask = new ParserTask();
+
+            // Start parsing the Google places in JSON format
+            // Invokes the "doInBackground()" method of the class ParserTask
+            parserTask.execute(result);
+        }
+
+        private String downloadUrl(String strUrl) throws IOException {
+            String data = "";
+            InputStream iStream = null;
+            HttpURLConnection urlConnection = null;
+            try {
+                URL url = new URL(strUrl);
+
+                // Creating an http connection to communicate with url
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // Connecting to url
+                urlConnection.connect();
+
+                // Reading data from url
+                iStream = urlConnection.getInputStream();
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+                StringBuffer sb = new StringBuffer();
+
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                data = sb.toString();
+
+                br.close();
+
+            } catch (Exception e) {
+//                Log.d("Exception while downloading url", e.toString());
+            } finally {
+                iStream.close();
+                urlConnection.disconnect();
+            }
+            return data;
+        }
+
+        private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
+
+            JSONObject jObject;
+
+            // Invoked by execute() method of this object
+            @Override
+            protected List<HashMap<String, String>> doInBackground(String... jsonData) {
+
+                List<HashMap<String, String>> places = null;
+                Place_JSON placeJson = new Place_JSON();
+
+                try {
+                    jObject = new JSONObject(jsonData[0]);
+
+                    places = placeJson.parse(jObject);
+
+                } catch (Exception e) {
+                    Log.d("Exception", e.toString());
+                }
+                return places;
+            }
+
+            // Executed after the complete execution of doInBackground() method
+            @Override
+            protected void onPostExecute(List<HashMap<String, String>> list) {
+
+                Log.d("Map", "list size: " + list.size());
+                // Clears all the existing markers;
+                mMap.clear();
+
+                for (int i = 0; i < list.size(); i++) {
+
+                    // Creating a marker
+                    MarkerOptions markerOptions = new MarkerOptions();
+
+                    // Getting a place from the places list
+                    HashMap<String, String> hmPlace = list.get(i);
+
+
+                    // Getting latitude of the place
+                    double lat = Double.parseDouble(hmPlace.get("lat"));
+
+                    // Getting longitude of the place
+                    double lng = Double.parseDouble(hmPlace.get("lng"));
+
+                    // Getting name
+                    String name = hmPlace.get("place_name");
+
+                    Log.d("Map", "place: " + name);
+
+                    // Getting vicinity
+                    String vicinity = hmPlace.get("vicinity");
+
+                    LatLng latLng = new LatLng(lat, lng);
+
+                    // Setting the position for the marker
+                    markerOptions.position(latLng);
+
+                    markerOptions.title(name + " : " + vicinity);
+
+                    // Placing a marker on the touched position
+                    Marker m = mMap.addMarker(markerOptions);
+
+                }
+
+            }
+
+            public class Place_JSON {
+
+                /**
+                 * Receives a JSONObject and returns a list
+                 */
+                public List<HashMap<String, String>> parse(JSONObject jObject) {
+
+                    JSONArray jPlaces = null;
+                    try {
+                        /** Retrieves all the elements in the 'places' array */
+                        jPlaces = jObject.getJSONArray("results");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    /** Invoking getPlaces with the array of json object
+                     * where each json object represent a place
+                     */
+                    return getPlaces(jPlaces);
+                }
+
+                private List<HashMap<String, String>> getPlaces(JSONArray jPlaces) {
+                    int placesCount = jPlaces.length();
+                    List<HashMap<String, String>> placesList = new ArrayList<HashMap<String, String>>();
+                    HashMap<String, String> place = null;
+
+                    /** Taking each place, parses and adds to list object */
+                    for (int i = 0; i < placesCount; i++) {
+                        try {
+                            /** Call getPlace with place JSON object to parse the place */
+                            place = getPlace((JSONObject) jPlaces.get(i));
+                            placesList.add(place);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return placesList;
+                }
+
+                /**
+                 * Parsing the Place JSON object
+                 */
+                private HashMap<String, String> getPlace(JSONObject jPlace) {
+
+                    HashMap<String, String> place = new HashMap<String, String>();
+                    String placeName = "-NA-";
+                    String vicinity = "-NA-";
+                    String latitude = "";
+                    String longitude = "";
+                    String reference = "";
+
+                    try {
+                        // Extracting Place name, if available
+                        if (!jPlace.isNull("name")) {
+                            placeName = jPlace.getString("name");
+                        }
+
+                        // Extracting Place Vicinity, if available
+                        if (!jPlace.isNull("vicinity")) {
+                            vicinity = jPlace.getString("vicinity");
+                        }
+
+                        latitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lat");
+                        longitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lng");
+                        reference = jPlace.getString("reference");
+
+                        place.put("place_name", placeName);
+                        place.put("vicinity", vicinity);
+                        place.put("lat", latitude);
+                        place.put("lng", longitude);
+                        place.put("reference", reference);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return place;
+                }
+            }
+
+        }
     }
 }

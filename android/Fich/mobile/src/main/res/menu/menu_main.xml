@@ -1,21 +1,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="always" />
-    <item
-        android:id="@+id/action_about"
-        android:orderInCategory="200"
-        app:showAsAction="never"
-        android:title="About"/>
-    <item
-        android:id="@+id/action_exit"
-        android:orderInCategory="300"
-        app:showAsAction="never"
-        android:title="Exit"/>
-    <item android:id="@+id/my_search"
-        android:title="@string/search_title"
-        android:icon="@drawable/ic_open_search"
-        app:showAsAction="ifRoom"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
+    <!--<item android:id="@+id/action_settings" android:title="@string/action_settings"-->
+        <!--android:orderInCategory="100" app:showAsAction="always" />-->
+    <!--<item-->
+        <!--android:id="@+id/action_about"-->
+        <!--android:orderInCategory="200"-->
+        <!--app:showAsAction="never"-->
+        <!--android:title="About"/>-->
+    <!--<item-->
+        <!--android:id="@+id/action_exit"-->
+        <!--android:orderInCategory="300"-->
+        <!--app:showAsAction="never"-->
+        <!--android:title="Exit"/>-->
+    <!--<item android:id="@+id/my_search"-->
+        <!--android:title="@string/search_title"-->
+        <!--android:icon="@drawable/ic_open_search"-->
+        <!--app:showAsAction="ifRoom"-->
+        <!--app:actionViewClass="android.support.v7.widget.SearchView" />-->
+    <item android:id="@+id/alert_field" android:title=""
+        android:orderInCategory="100" app:showAsAction="always"
+        android:enabled="true"/>
 </menu>

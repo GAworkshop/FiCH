@@ -54,7 +54,6 @@
 	switch ($_POST['action']) {
 		case $create:
 			createUser();
-			exitCode(300);
 			break;
 
 		case $delete:
@@ -91,7 +90,7 @@
 		}else{
 			$t->insert('INSERT INTO `member` (`user_name`, `user_pass`, `phone`) VALUES ("'.$name.'", "'.$pass.'", "'.$phone.'");');
 			$last_id = mysql_insert_id();
-			createUserTable($id);
+			createUserTable($last_id);
 			exitCode(300);
 		}
 

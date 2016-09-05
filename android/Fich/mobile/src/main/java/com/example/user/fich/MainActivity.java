@@ -1,7 +1,5 @@
 package com.example.user.fich;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.net.Uri;
@@ -13,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -303,15 +300,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-
+/*
         MenuItem menuSearchItem = menu.findItem(R.id.my_search);
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//        SearchView searchView = (SearchView) menuSearchItem.getActionView();
+        //SearchView searchView = (SearchView) menuSearchItem.getActionView();
         SearchView searchView = (SearchView) menuSearchItem.getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+*/
         return true;
     }
 
@@ -319,14 +317,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.e("~~DEBUG~~", "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
-            case R.id.action_about:
+            //case R.id.action_about:
                 // About option clicked.
-                return true;
-            case R.id.action_exit:
+                //return true;
+            //case R.id.action_exit:
                 // Exit option clicked.
-                return true;
-            case R.id.action_settings:
+                //return true;
+            case R.id.alert_field:
                 // Settings option clicked.
+                Log.e("~~DEBUGTTT~~", "alert field clicked!!");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
