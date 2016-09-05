@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 import layout.CardFragment;
 import layout.ContactFragment;
 import layout.EscapeFragment;
@@ -59,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String page_url = "http://140.115.207.72/fich/FE/index.html";
 
-    PreferencesHelper prefHelpr;
+    PreferencesHelper prefHelper;
+
+    String relReq;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         Log.e("~~DEBUG~~", "main onCreate");
         setContentView(R.layout.activity_main);
 
-        prefHelpr = new PreferencesHelper(this);
+        prefHelper = new PreferencesHelper(this);
 
 
 
@@ -154,7 +158,9 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 System.out.println("drawer opened");
-                //new DBconnect().execute();
+
+                ((TextView)drawerView.findViewById(R.id.big_name)).setText(prefHelper.getString(getResources().getString(R.string.name)));
+
             }
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -236,6 +242,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("~~DEBUG~~", "" + item.getOrder());
 
                 switch (item.getItemId()){
+                    case R.id.navigation_item_relationship:
+                        Intent relIntent = new Intent(MainActivity.this, RelationshipActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("relData", relReq);
+                        relIntent.putExtras(bundle);
+                        startActivity(relIntent);
+                        break;
                     case R.id.navigation_item_feedback:
                         break;
                     case R.id.navigation_item_moreinfo:
@@ -336,6 +349,33 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, SetInfoActivity.class));
     }
 
+    public void checkMatchRequest(){
+        DBRequest dbRequest = new DBRequest(Action.CHECK_MATCH);
+        dbRequest.setPair("wear_id", prefHelper.getInt(getResources().getString(R.string.UID))+"");
+        ConnectRequest m = new ConnectRequest(dbRequest);
+        m.execute(new DataCallback() {
+            @Override
+            public void onFinish(JSONArray jsonArray) {
+                try {
+                    Log.e("~~~~~~~~~~~~", ">>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<"+jsonArray.optBoolean(0, true));
+                    if(jsonArray.optBoolean(0, true)){  //get a boolean value at 0, if it's not a boolean, means is data array
+                        //things to do when there's more than zero match requests
+                        left_drawer.getMenu().getItem(5).setEnabled(true);
+                        relReq = jsonArray.toString();
+                    }else{
+                        //things to do when no match request
+                        left_drawer.getMenu().getItem(5).setEnabled(false);
+                        relReq = "";
+                    }
+
+                }catch (Exception e){
+
+                }
+
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -346,10 +386,10 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         Log.e("~~DEBUG~~", "main onResume");
-        Toast.makeText(this,""+prefHelpr.getString("name"), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,""+ prefHelper.getString(getResources().getString(R.string.name)), Toast.LENGTH_SHORT).show();
 
         //if info hasn't been set, show the default page, else show main page.
-        if(prefHelpr.getBoolean(getResources().getString(R.string.is_setting_done))){
+        if(prefHelper.getBoolean(getResources().getString(R.string.is_setting_done))){
             findViewById(R.id.tabs).setVisibility(View.VISIBLE);
             findViewById(R.id.viewpager).setVisibility(View.VISIBLE);
             findViewById(R.id.start_setting_frame).setVisibility(View.GONE);
@@ -359,6 +399,8 @@ public class MainActivity extends AppCompatActivity {
             findViewById(R.id.start_setting_frame).setVisibility(View.VISIBLE);
         }
         //if not set self info yet, go back to set
+
+        checkMatchRequest();/**/
     }
 
     @Override

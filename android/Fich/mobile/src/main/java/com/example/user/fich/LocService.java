@@ -16,6 +16,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,6 +29,8 @@ import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
+
+import org.json.JSONArray;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -152,6 +155,7 @@ public class LocService extends Service implements
 
     double tempLongitude = 0;
     double tempLatitude = 0;
+
     public void locCollect(Location location){
         tempLongitude += location.getLongitude();
         tempLatitude += location.getLatitude();
@@ -170,6 +174,7 @@ public class LocService extends Service implements
             */
             //統計並存至SQLite
             MyLocation recordLoc = new MyLocation(tempLongitude/locateTimes,tempLatitude/locateTimes,location.getTime());
+
             long rowId = helper.insert(recordLoc);
             if (rowId != -1) {
                 System.out.println("insert至SQLite成功");
@@ -184,11 +189,38 @@ public class LocService extends Service implements
             }catch (SecurityException e){
 
             }
+
+            if( prefHelper.getInt(getResources().getString(R.string.UID)) != 0 ){
+
+                DBRequest dbRequest = new DBRequest(Action.LOC_SAVE);
+                dbRequest.setPair("id", prefHelper.getInt(getResources().getString(R.string.UID))+"");
+
+                String data = "[[";
+                data += location.getLongitude();
+                data += "," + location.getLatitude();
+                data += ",#" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(location.getTime()));
+                data += "#]]";
+
+                dbRequest.setPair("data", data);
+                ConnectRequest m = new ConnectRequest(dbRequest);
+                m.execute(new DataCallback() {
+                    @Override
+                    public void onFinish(JSONArray jsonArray) {
+                        try {
+
+                        }catch (Exception e){
+
+                        }
+
+                    }
+                });
+            }
         }
     }
 
     //更改taskPeriod每次定位間隔時間的方法
     public void setTaskPeriod(int minute){
+        minute = 1;
         timer.cancel();
         timer = new Timer();
         taskPeriod = minute * 60000; //分鐘轉毫秒
@@ -239,6 +271,7 @@ public class LocService extends Service implements
 
     @Override
     public void onDataChanged(DataEventBuffer dataEventBuffer) {
+
         for (DataEvent event : dataEventBuffer) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 // DataItem changed
@@ -254,6 +287,33 @@ public class LocService extends Service implements
                     }
                     System.out.println(hr.toString());
                     // 上傳至Server
+
+                    Log.e("heart", "heart activate~~~~~~~~~~~~~~~~~~~~~");
+
+                    if( prefHelper.getInt(getResources().getString(R.string.UID)) != 0 ){
+
+                        DBRequest dbRequest = new DBRequest(Action.HEART_SAVE);
+                        dbRequest.setPair("id", prefHelper.getInt(getResources().getString(R.string.UID))+"");
+
+                        String data = "[[";
+                        data += hr.getHeartRate();
+                        data += ",#" + hr.getDateTime();
+                        data += "#]]";
+
+                        dbRequest.setPair("data", data);
+                        ConnectRequest m = new ConnectRequest(dbRequest);
+                        m.execute(new DataCallback() {
+                            @Override
+                            public void onFinish(JSONArray jsonArray) {
+                                try {
+
+                                }catch (Exception e){
+
+                                }
+
+                            }
+                        });
+                    }
                 }else if (item.getUri().getPath().compareTo("/SosSignal") == 0) {
                     ArrayList<Contact> al = prefHelper.getContactList();
                     SmsManager sms = SmsManager.getDefault();

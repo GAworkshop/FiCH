@@ -21,8 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/textView10"
+            android:text=""
+            android:id="@+id/big_name"
             android:layout_gravity="bottom"
             android:layout_weight="1"/>
 

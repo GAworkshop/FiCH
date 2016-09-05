@@ -160,7 +160,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Log.e("~~DEBUG~~", "map onPause");
         mapView.onPause();
         try {
-            lm.removeUpdates(myLocListener);
+            if(lm != null)
+                lm.removeUpdates(myLocListener);
         }catch (SecurityException e){
 
         }
@@ -234,7 +235,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (bestProvider.equals("gps") || bestProvider.equals("network")) { // 有開定位
             System.out.println("MyLocation : On , the locating provider is " + bestProvider);
             try {
-                lm.requestLocationUpdates(bestProvider, 300000, 0, myLocListener);
+                lm.requestLocationUpdates(bestProvider, 180000, 0, myLocListener);
             }catch (SecurityException e){
 
             }

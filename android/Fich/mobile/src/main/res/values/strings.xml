@@ -134,4 +134,9 @@
         <item>60分鐘</item>
     </string-array>
     <string name="title_activity_send">SENDActivity</string>
+
+    <string-array name="genders">
+        <item>男生</item>
+        <item>女生</item>
+    </string-array>
 </resources>

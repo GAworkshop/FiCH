@@ -8,11 +8,11 @@ import org.json.JSONException;
 /**
  * Created by huang on 2016/8/3.
  */
-public class MemberRequest {
+public class ConnectRequest {
 
     DBconnect conn;
 
-    public MemberRequest(DBRequest request){
+    public ConnectRequest(DBRequest request){
         conn = new DBconnect(request);
     }
 
@@ -37,7 +37,11 @@ public class MemberRequest {
 
                             //if returnde a code, and it means true, then put it here and returned true
 
-                            if(result.equals("300")){
+                            if(
+                                    result.equals("300")            //user create success
+                                 || result.equals("400")            //user update success
+                                    )
+                            {   //user update success
                                 code = "[true]";
                             }
 

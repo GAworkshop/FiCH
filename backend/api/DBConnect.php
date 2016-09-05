@@ -48,7 +48,7 @@
 
 		function count($query = 'SELECT count(*) FROM `testtable`'){
 			$result = mysql_query($query) or die ('103');
-			return intval(mysql_fetch_array($result, MYSQL_NUM)[0])."<br>";
+			return intval(mysql_fetch_array($result, MYSQL_NUM)[0]);
 		}
 
 		function insert($query = 'INSERT INTO `testtable` (`id`, `x`, `y`, `z`, `time`) VALUES (NULL, "0.87", "0.87", "0.87", NULL);'){

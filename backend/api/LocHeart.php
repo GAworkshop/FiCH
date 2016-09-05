@@ -3,21 +3,32 @@
 	calling parameters:
 
 		action :
-			"create" : create a record
-			"select" : return data
+			"create_loc" : create a location record
+			"select_loc" : return location data
+			"create_heart" : create a heart record
+			"select_heart" : return heart data
 
 		id :
 			insert or select under a given id
 
 		"data" :
 			data in JSON format
-			ex:
+			ex:(loc)
 			[
-				[longitude, latitude, heart-beat-rate],
+				[longitude, latitude, time],
 				.
 				.
 				.
 				[......]
+			]
+
+			ex:(heart)
+			[
+				[heart-beat-rate, time]
+				.
+				.
+				.
+				[....]
 			]
 		"from" :
 			select records newer than a given time-stamp
@@ -40,6 +51,7 @@
 
 
 		501 : error
+		700 : successs
 
 	*/
 
@@ -48,65 +60,92 @@
 	require_once('DBConnect.php');
 	$t = new DBConnect();
 
-	$create = 'create';
-	$select = 'select';
+	$create_loc = 'create_loc';
+	$select_loc = 'select_loc';
+	$create_heart = 'create_heart';
+	$select_heart = 'select_heart';
 
-	/*
-	$_POST['action'] = $select;
-	$_POST['data'] = '';
-	$_POST['newest'] = '7';
-	*/
+	
+	//$_POST['action'] = $create_heart;
+	//$_POST['data'] = '[[50,0]]';
+	//$_POST['newest'] = '7';
+	
 
 	switch($_POST['action']){
-		case $create:
-			createData();
+		case $create_loc:
+		case $create_heart:
+			createData($_POST['action']);
 			break;
 
-		case $select:
-			selectNewestData();
+		case $select_loc:
+		case $select_heart:
+			selectNewestData($_POST['action']);
 			break;
 
 		default:
 			exitCode(501);
 	}
 
-	function createData(){
+	function createData($type){
 		global $t;
 		$id = $_POST['id'];
 
 		try {
+			$schema;
+			$fields;
+			if($type == 'create_loc'){
+				$schema = 'loc_';
+				$fields = '`longitude`, `latitude`, `time`';
+			}else{
+				$schema = 'heart_';
+				$fields = '`heart`, `time`';
+			}
+
 			$data = $_POST['data'];
-			$sql = 'INSERT INTO `loc_heart_`'.$id.' (`longitude`, `latitude`, `heart`) VALUES ';
+			$sql = 'INSERT INTO `'.$schema.$id.'` ('.$fields.') VALUES ';
 			//directly change JSON to SQL query string
 			$data = substr($data, 1, -1);				//remove head and tail [] in JSON data
 			$data = str_replace('[', '(', $data);		//replace [ to ( in JSON data
 			$data = str_replace(']', ')', $data);		//replace ] to ) in JSON data
+			$data = str_replace('#', '"', $data);
 			$sql .= $data;
+
 
 		}catch(Exception $e){
 			exitCode(501);
 		}
 		$t->insert($sql);
+		exitCode(700);
 	}
 
-	function selectNewestData(){
+	function selectNewestData($type){
 		global $t;
 		$id = $_POST['id'];
 
 		try{
 			$n = intval($_POST['newest']);
+		
+			if($n == 0){
+				exitCode(501);
+			}
+
+			$schema;
+			if($type == 'create_loc'){
+				$schema = 'loc_';
+			}else{
+				$schema = 'heart_';
+			}
+
+			$sql = 'SELECT * FROM `'.$schema.$id.'` ORDER BY `time` DESC LIMIT '.$n;
+			//echo $sql;
+			
+			echo $t->queryJSON($sql);
+
 		}catch(Exception $e){
 			exitCode(501);
 		}
 
-		if($n == 0){
-			exitCode(501);
-		}
-
-		$sql = 'SELECT * FROM `loc_heart_`'.$id.' ORDER BY `time` DESC LIMIT '.$n;
-		//echo $sql;
 		
-		echo $t->queryJSON($sql);
 	}
 
 	function exitCode($code = 501){

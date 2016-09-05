@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.example.user.fich.Action;
 import com.example.user.fich.DBRequest;
 import com.example.user.fich.DataCallback;
-import com.example.user.fich.MemberRequest;
+import com.example.user.fich.ConnectRequest;
 import com.example.user.fich.R;
 
 import org.json.JSONArray;
@@ -57,7 +57,7 @@ public class RegisterActivity extends Activity {
                     dbRequest.setPair("name",email);
                     dbRequest.setPair("pass", password);
                     dbRequest.setPair("phone", phone);
-                    MemberRequest m = new MemberRequest(dbRequest);
+                    ConnectRequest m = new ConnectRequest(dbRequest);
                     m.execute(new DataCallback() {
                         @Override
                         public void onFinish(JSONArray jsonArray) {

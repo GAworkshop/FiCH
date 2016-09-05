@@ -54,7 +54,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         values.put(COL_LNG, loc.getLongitude());
         values.put(COL_LAT, loc.getLatitude());
         values.put(COL_TIME, loc.getUnixTime());
-        return db.insert(TABLE_NAME, null, values);
+        long result = db.insert(TABLE_NAME, null, values);
+        db.close();
+        return result;
     }
 
     public long insertHR(MyHeartRate hr){
@@ -62,7 +64,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(COL_HR, hr.getHeartRate());
         values.put(COL_HR_TIME, hr.getUnixTime());
-        return db.insert(HR_TABLE_NAME, null, values);
+        long result = db.insert(HR_TABLE_NAME, null, values);
+        db.close();
+        return result;
     }
 
     public ArrayList<MyLocation> getList(){
@@ -80,6 +84,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             locList.add(loc);
         }
         cursor.close();
+        db.close();
         return locList;
     }
 
@@ -97,6 +102,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
             hrList.add(mHR);
         }
         cursor.close();
+        db.close();
         return hrList;
     }
 

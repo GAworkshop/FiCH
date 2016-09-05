@@ -29,7 +29,7 @@ public class MyHeartRate {
     }
 
     public String getDateTime() {
-        return new SimpleDateFormat("yyyy年MM月dd日 HH:mm").format(new Date(getUnixTime()));
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(getUnixTime()));
     }
 
     public void setTime(long time) {

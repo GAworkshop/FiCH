@@ -7,6 +7,7 @@
     <!-- data of user -->
     <string name="UID">UID</string>
     <string name="name">u_name</string>
+    <string name="gender_key">gender</string>
     <string name="birthday">birthday</string>
     <string name="blood">blood</string>
     <string name="history">history</string>

@@ -12,6 +12,7 @@ public class DBRequest {
     HashMap<String, String> data = new HashMap<String, String>();
     String url = "";
     boolean ready = false;
+    private static final String domain = "http://140.115.207.72/fich/api";
 
     public DBRequest(Action ua){
         this.action = ua;
@@ -22,11 +23,21 @@ public class DBRequest {
             case UPDATE_USER:
             case SELECT_USER:
             case USER_LOGIN:
-                this.url = "http://140.115.207.72/fich/api/Member.php";
+                this.url = domain + "/Member.php";
                 break;
             case SENSOR_SAVE:
             case SENSOR_SELECT:
-                this.url = "http://140.115.207.72/fich/api/SensorData.php";
+                this.url = domain + "/SensorData.php";
+                break;
+            case LOC_SAVE:
+            case HEART_SAVE:
+            case LOC_SELECT:
+            case HEART_SELECT:
+                this.url = domain + "/LocHeart.php";
+                break;
+            case CHECK_MATCH:
+            case AUTH:
+                this.url = domain + "/Matches.php";
                 break;
             default:
                 this.url = "GGGGGGGGGGGGGGGGGGGGGGGGG";

@@ -12,10 +12,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.example.user.fich.Action;
+import com.example.user.fich.ConnectRequest;
+import com.example.user.fich.DBRequest;
+import com.example.user.fich.DataCallback;
 import com.example.user.fich.PreferencesHelper;
 import com.example.user.fich.R;
+
+import org.json.JSONArray;
 
 import java.util.Calendar;
 
@@ -26,21 +34,23 @@ public class SetInfoActivity extends AppCompatActivity {
     private EditText et_blood;
     private EditText et_history;
     private EditText et_allergic;
+    private Spinner genderSpinner;
 
     private static int mYear, mMonth, mDay, mHour, mMinute;
 
-    PreferencesHelper prefHelpr;
+    PreferencesHelper prefHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_info);
-        prefHelpr = new PreferencesHelper(this);
+        prefHelper = new PreferencesHelper(this);
         btn_birthday = (Button) findViewById(R.id.btn_birthday);
         et_name = (EditText) findViewById(R.id.et_person_name);
         et_blood = (EditText) findViewById(R.id.et_blood);
         et_history = (EditText) findViewById(R.id.et_history);
         et_allergic = (EditText) findViewById(R.id.et_allergic);
+        genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
         et_name.requestFocus();
         showNow();
     }
@@ -63,6 +73,7 @@ public class SetInfoActivity extends AppCompatActivity {
 
         String name = et_name.getText().toString();
         String birthday = btn_birthday.getText().toString();
+        String gender = genderSpinner.getSelectedItemPosition() == 0 ? "男生" : "女生";
         String blood = et_blood.getText().toString();
 
         if(name.isEmpty()){
@@ -83,14 +94,39 @@ public class SetInfoActivity extends AppCompatActivity {
             return;
         }
 
-        prefHelpr.storeData(getResources().getString(R.string.name), name);
-        prefHelpr.storeData(getResources().getString(R.string.birthday), birthday);
-        prefHelpr.storeData(getResources().getString(R.string.blood), blood);
-        prefHelpr.storeData(getResources().getString(R.string.history), et_history.getText().toString());
-        prefHelpr.storeData(getResources().getString(R.string.allergic), et_allergic.getText().toString());
-        prefHelpr.storeData(getResources().getString(R.string.is_setting_done), true);
+        prefHelper.storeData(getResources().getString(R.string.name), name);
+        prefHelper.storeData(getResources().getString(R.string.gender_key), gender);
+        prefHelper.storeData(getResources().getString(R.string.birthday), birthday);
+        prefHelper.storeData(getResources().getString(R.string.blood), blood);
+        prefHelper.storeData(getResources().getString(R.string.history), et_history.getText().toString());
+        prefHelper.storeData(getResources().getString(R.string.allergic), et_allergic.getText().toString());
+        prefHelper.storeData(getResources().getString(R.string.is_setting_done), true);
 
-        this.finish();
+        DBRequest dbRequest = new DBRequest(Action.UPDATE_USER);
+        dbRequest.setPair("id", prefHelper.getInt(getResources().getString(R.string.UID))+"");
+        dbRequest.setPair("person_name", name);
+        dbRequest.setPair("birthday", birthday);
+        dbRequest.setPair("history", et_history.getText().toString());
+        dbRequest.setPair("allergic", et_allergic.getText().toString());
+        dbRequest.setPair("setting_done", "1");
+        ConnectRequest m = new ConnectRequest(dbRequest);
+        m.execute(new DataCallback() {
+            @Override
+            public void onFinish(JSONArray jsonArray) {
+                try {
+                    Log.e("~~~~~~~~~~~~", ">>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<"+jsonArray.optBoolean(0));
+                    if(jsonArray.getBoolean(0)){
+                        Toast.makeText(SetInfoActivity.this, "success", Toast.LENGTH_SHORT);
+                        SetInfoActivity.this.finish();
+                    }
+                    Toast.makeText(SetInfoActivity.this, "connection lost", Toast.LENGTH_SHORT);
+                }catch (Exception e){
+
+                }
+
+            }
+        });
+
     }
 
     @Override

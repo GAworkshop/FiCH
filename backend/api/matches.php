@@ -43,11 +43,12 @@
 	$select = 'select';
 	$auth = 'auth';
 	$unauth = 'unauth';
+	$check = 'check';
 
 
-	$_POST['action'] = $unauth;
-	$_POST['wear_id'] = '5';
-	$_POST['family_id'] = '6';
+	// $_POST['action'] = $check;
+	// $_POST['wear_id'] = '5';
+	// $_POST['family_id'] = '6';
 
 
 	switch($_POST['action']){
@@ -65,6 +66,10 @@
 
 		case $unauth:
 			auth(0);
+			break;
+
+		case $check:
+			check();
 			break;
 
 		default:
@@ -118,6 +123,24 @@
 
 		$sql = 'UPDATE `matches` SET `access` = "'.$a.'" WHERE `wear_id` = "'.$wear_id.'" AND `family_id` = "'.$family_id.'"';
 		echo $t->raw_query($sql);
+	}
+
+	function check(){
+		global $t;
+
+		$wear_id = $_POST['wear_id'];
+
+		$sql = 'SELECT `family_id`, `user_name`, `phone`, `person_name` FROM `matches` LEFT JOIN `member` ON `wear_id` = `member`.`id` WHERE `access` = 0 AND `wear_id` = "'.$wear_id.'"';
+
+		$result = $t->queryJSON($sql);
+
+		if($result == '[]'){
+			echo "[false]";
+		}else{
+			echo $result;
+		}
+
+		return;		
 	}
 
 

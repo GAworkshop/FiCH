@@ -59,7 +59,7 @@ public class CardFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_card, container, false);
 
         ((TextView)view.findViewById(R.id.textView5)).setText(prefHelper.getString(getResources().getString(R.string.name)));
-        ((TextView)view.findViewById(R.id.textView6)).setText(prefHelper.getString(getResources().getString(R.string.name)));
+        ((TextView)view.findViewById(R.id.textView6)).setText(prefHelper.getString(getResources().getString(R.string.gender_key)));
         ((TextView)view.findViewById(R.id.textView7)).setText(prefHelper.getString(getResources().getString(R.string.birthday)));
         ((TextView)view.findViewById(R.id.textView8)).setText(prefHelper.getString(getResources().getString(R.string.blood)));
 
@@ -74,7 +74,7 @@ public class CardFragment extends Fragment {
         super.onResume();
 
         ((TextView)view.findViewById(R.id.textView5)).setText(prefHelper.getString(getResources().getString(R.string.name)));
-        ((TextView)view.findViewById(R.id.textView6)).setText(prefHelper.getString(getResources().getString(R.string.name)));
+        ((TextView)view.findViewById(R.id.textView6)).setText(prefHelper.getString(getResources().getString(R.string.gender_key)));
         ((TextView)view.findViewById(R.id.textView7)).setText(prefHelper.getString(getResources().getString(R.string.birthday)));
         ((TextView)view.findViewById(R.id.textView8)).setText(prefHelper.getString(getResources().getString(R.string.blood)));
 

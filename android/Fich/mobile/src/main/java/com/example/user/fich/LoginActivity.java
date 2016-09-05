@@ -250,7 +250,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             DBRequest dbRequest = new DBRequest(Action.USER_LOGIN);
             dbRequest.setPair("name",email);
             dbRequest.setPair("pass", password);
-            MemberRequest m = new MemberRequest(dbRequest);
+            ConnectRequest m = new ConnectRequest(dbRequest);
             m.execute(new DataCallback() {
                 @Override
                 public void onFinish(JSONArray jsonArray) {
@@ -267,12 +267,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                 Log.e("debugTTTT", "yes");
                                 Toast.makeText(LoginActivity.this, "User Logged In!!", Toast.LENGTH_SHORT);
                                 JSONArray dataRow = jsonArray.getJSONArray(0);
+
                                 prefHelpr.storeData("isLogin", true);
                                 prefHelpr.storeData(getResources().getString(R.string.UID), dataRow.getInt(0));
                                 prefHelpr.storeData(getResources().getString(R.string.name), dataRow.getInt(4));
-                                prefHelpr.storeData(getResources().getString(R.string.birthday), dataRow.getInt(5));
-                                prefHelpr.storeData(getResources().getString(R.string.history), dataRow.getInt(6));
-                                prefHelpr.storeData(getResources().getString(R.string.allergic), dataRow.getInt(7));
+                                prefHelpr.storeData(getResources().getString(R.string.gender_key), dataRow.getString(5));
+                                prefHelpr.storeData(getResources().getString(R.string.birthday), dataRow.getInt(6));
+                                prefHelpr.storeData(getResources().getString(R.string.history), dataRow.getInt(7));
+                                prefHelpr.storeData(getResources().getString(R.string.allergic), dataRow.getInt(8));
+
+                                if(dataRow.getBoolean(10)){
+                                    prefHelpr.storeData(getResources().getString(R.string.is_setting_done), true);
+                                }
 
                             }catch (Exception e){
 
