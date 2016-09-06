@@ -220,7 +220,6 @@ public class LocService extends Service implements
 
     //更改taskPeriod每次定位間隔時間的方法
     public void setTaskPeriod(int minute){
-        minute = 1;
         timer.cancel();
         timer = new Timer();
         taskPeriod = minute * 60000; //分鐘轉毫秒

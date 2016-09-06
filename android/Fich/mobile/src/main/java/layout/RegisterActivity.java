@@ -64,12 +64,12 @@ public class RegisterActivity extends Activity {
 
                             if(jsonArray.optBoolean(0)){
                                 //things to do when add user success
-                                Toast.makeText(RegisterActivity.this, "SUCCESS!!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "註冊成功!!", Toast.LENGTH_SHORT).show();
                                 finish();
 
                             }else {
                                 //things to do when fail
-                                Toast.makeText(RegisterActivity.this, "User name already exists.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "帳號名稱已存在.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

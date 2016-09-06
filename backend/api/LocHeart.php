@@ -130,7 +130,7 @@
 			}
 
 			$schema;
-			if($type == 'create_loc'){
+			if($type == 'select_loc'){
 				$schema = 'loc_';
 			}else{
 				$schema = 'heart_';

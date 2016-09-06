@@ -105,6 +105,7 @@ public class SetInfoActivity extends AppCompatActivity {
         DBRequest dbRequest = new DBRequest(Action.UPDATE_USER);
         dbRequest.setPair("id", prefHelper.getInt(getResources().getString(R.string.UID))+"");
         dbRequest.setPair("person_name", name);
+        dbRequest.setPair("gender", gender);
         dbRequest.setPair("birthday", birthday);
         dbRequest.setPair("history", et_history.getText().toString());
         dbRequest.setPair("allergic", et_allergic.getText().toString());

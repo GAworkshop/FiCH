@@ -34,9 +34,7 @@ public class ConnectRequest {
                             String code = "[false]";
                             Log.e("debugTTTT", "parse JSON Array Fail~");
                             Log.e("debugTTTT", result);
-
                             //if returnde a code, and it means true, then put it here and returned true
-
                             if(
                                     result.equals("300")            //user create success
                                  || result.equals("400")            //user update success

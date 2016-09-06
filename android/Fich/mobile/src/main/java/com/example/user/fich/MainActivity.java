@@ -1,7 +1,11 @@
 package com.example.user.fich;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -10,6 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -309,6 +314,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void netWorkValidation(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo == null || !networkInfo.isConnected()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("沒有網路連線")
+                    .setMessage("請檢查網路狀態")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -386,7 +409,9 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         Log.e("~~DEBUG~~", "main onResume");
-        Toast.makeText(this,""+ prefHelper.getString(getResources().getString(R.string.name)), Toast.LENGTH_SHORT).show();
+
+        netWorkValidation();
+        //Toast.makeText(this,""+ prefHelper.getString(getResources().getString(R.string.name)), Toast.LENGTH_SHORT).show();
 
         //if info hasn't been set, show the default page, else show main page.
         if(prefHelper.getBoolean(getResources().getString(R.string.is_setting_done))){

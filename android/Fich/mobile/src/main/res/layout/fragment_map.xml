@@ -28,14 +28,14 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="醫療資源"
                 android:id="@+id/button2"
                 android:layout_marginRight="15dp"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Button"
+                android:text="定位追蹤"
                 android:id="@+id/button3"
                 android:layout_marginLeft="15dp"/>
         </LinearLayout>

@@ -31,6 +31,8 @@ public class RelationshipActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relationship);
 
+        prefHelper = new PreferencesHelper(this);
+
         //接收待確認資料 , 將資料放進rela_list裡
         receiveData();
 

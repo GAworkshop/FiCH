@@ -113,6 +113,9 @@
 		if($_POST['person_name']){
 			$sql .= '`person_name` = "'.$_POST['person_name'].'",';
 		}
+		if($_POST['gender']){
+			$sql .= '`gender` = "'.$_POST['gender'].'",';
+		}
 		if($_POST['birthday']){
 			$sql .= '`birthday` = "'.$_POST['birthday'].'",';
 		}

@@ -5,18 +5,26 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
+import com.example.user.fich.Action;
+import com.example.user.fich.ConnectRequest;
+import com.example.user.fich.DBRequest;
+import com.example.user.fich.DataCallback;
+import com.example.user.fich.MySQLiteHelper;
+import com.example.user.fich.PreferencesHelper;
 import com.example.user.fich.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -34,11 +42,15 @@ public class SelfInfoFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    MySQLiteHelper sqLiteHelper;
+    PreferencesHelper prefHelper;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     LineChart lineChart;
+    float[] points = {70,80,85,72,81,95,84,55,104,93};
 
     //private OnFragmentInteractionListener mListener;
 
@@ -71,6 +83,26 @@ public class SelfInfoFragment extends Fragment {
 //            mParam1 = getArguments().getString(ARG_PARAM1);
 //            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
+        sqLiteHelper = new MySQLiteHelper(getActivity());
+        prefHelper = new PreferencesHelper(getActivity());
+
+        DBRequest dbRequest = new DBRequest(Action.HEART_SELECT);
+        dbRequest.setPair("id", prefHelper.getInt(getResources().getString(R.string.UID))+"" );
+        dbRequest.setPair("newest", 10+"");
+        ConnectRequest m = new ConnectRequest(dbRequest);
+        m.execute(new DataCallback() {
+            @Override
+            public void onFinish(JSONArray jsonArray) {
+                try {
+                    Log.e("~~~~~~~~~~~~", ">>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<"+jsonArray.optBoolean(0));
+
+
+                }catch (Exception e){
+
+                }
+
+            }
+        });
     }
 
     @Override
@@ -94,15 +126,20 @@ public class SelfInfoFragment extends Fragment {
             }
         });
 
+        //ArrayList<MyHeartRate> array = sqLiteHelper.getHRList();
+
+
+
         lineChart = (LineChart) view.findViewById(R.id.lineChart1);
 
         ArrayList<String> xAXES = new ArrayList<>();
         ArrayList<Entry> yAXESheart = new ArrayList<>();
         double x = 0 ;
-        int numDataPoints = 200;
+        int numDataPoints = 10;
         for(int i=0;i<numDataPoints;i++){
-            float heart = (float) (Math.random()*30+70);
-            x+=50;
+            //float heart = (float) (Math.random()*10+80);
+            float heart = points[i];
+            x+=40;
             yAXESheart.add(new Entry(i,heart));
             xAXES.add(i, String.valueOf(x));
         }
@@ -130,12 +167,12 @@ public class SelfInfoFragment extends Fragment {
 
     public void scrollRight(View view){
         lineChart.scrollBy(5, lineChart.getScrollY());
-        Toast.makeText(getActivity(), "left", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "left", Toast.LENGTH_SHORT).show();
     }
 
     public void scrollLeft(View view){
         lineChart.scrollBy(-5, lineChart.getScrollY());
-        Toast.makeText(getActivity(), "right", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "right", Toast.LENGTH_SHORT).show();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

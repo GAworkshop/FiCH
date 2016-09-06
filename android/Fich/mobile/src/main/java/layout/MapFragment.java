@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.user.fich.DataService;
@@ -135,6 +136,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         MapsInitializer.initialize(getActivity());
         mapView.getMapAsync(this);
 
+        Button medicalResBtn = (Button)rootView.findViewById(R.id.button2);
+        Button locTrackBtn = (Button)rootView.findViewById(R.id.button3);
+        medicalResBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapView.getMapAsync(MapFragment.this);
+            }
+        });
+        locTrackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locList = helper.getList();
+                for(MyLocation m:locList){
+                    System.out.println(m.toString());
+                }
+                mMap.clear();
+                LatLng latlng =null;
+                for(MyLocation loc:locList){
+                    latlng = new LatLng(loc.getLatitude(),loc.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latlng).title(loc.getDateTime()));
+                }
+                if(latlng == null){
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(23.8246732,121.0472636)));
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(8));
+                }else{
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latlng));
+                    mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -239,7 +271,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }catch (SecurityException e){
 
             }
-            Toast.makeText(getActivity(), "定位中", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "定位中", Toast.LENGTH_LONG).show();
         } else { // 沒開定位,傳送通知提醒
             Toast.makeText(getActivity(), "定位服務未開啟 , 無法使用鄰近醫療單位功能", Toast.LENGTH_LONG).show();
         }
