@@ -105,6 +105,77 @@
 				//echo "connection closed";
 			}
 		}
+
+		//use email to find family's id 
+		function findUserId($target_email){
+			$sql = 'SELECT `id` FROM `member` WHERE `user_name` = "'. $target_email .'"';
+			// $sql = "SELECT id FROM member WHERE user_name = " . $
+			$result = mysql_query($sql) or die('105');
+			while ($row = mysql_fetch_assoc($result)) {
+				$id = $row['id'];
+			}
+			return $id;
+		}
+
+		function look_family_data($wear_id){
+
+			$family_ids = array();
+			$sql = 'SELECT `family_id` FROM `matches` WHERE `wear_id` = "'. $wear_id .'" AND `access` = 1';
+			$result = mysql_query($sql) or die('106');
+			
+			while($row = mysql_fetch_array($result, MYSQL_NUM)){
+				foreach ($row as $per) {
+					array_push($family_ids, $per);
+				}
+			}
+
+			$sql = 'SELECT `wear_id` FROM `matches` WHERE `family_id` = "'. $wear_id .'" AND `access` = 1';
+			$result = mysql_query($sql) or die('106');
+			
+			while($row = mysql_fetch_array($result, MYSQL_NUM)){
+				foreach ($row as $per) {
+					array_push($family_ids, $per);
+				}
+			}
+
+			/*$test = "";
+			for($x = 0; $x < count($family_ids); $x++) {
+			    $test = $test . $family_ids[$x] . " ";
+			}
+			return $test;*/
+			$output = "";
+			for($x = 0; $x < count($family_ids); $x++) {
+			    $heart_table = "heart_" . $family_ids[$x];
+			    $sql = 'SELECT `heart` FROM `'. $heart_table .'`';
+			    $result = mysql_query($sql) or die('117');
+			    $count = 0;
+			    $heart = 0;
+			    while($row = mysql_fetch_assoc($result)){
+			    	$heart = $heart + $row['heart'];
+			    	$count = $count + 1;
+			    }
+			    $heart = $heart / $count;
+
+			    $loc_table = "loc_" . $family_ids[$x];
+			    $sql = 'SELECT `longitude`,`latitude` FROM `'. $loc_table .'`';
+			    $result = mysql_query($sql) or die('107');
+			    $lng = "";
+			    $lat = "";
+			    while($row = mysql_fetch_assoc($result)){
+			    	$lng = $row['longitude'];
+			    	$lat = $row['latitude'];
+			    }
+
+			    $sql = 'SELECT `user_name` FROM `member` WHERE `id` = "'. $family_ids[$x] .'"';
+			    $result = mysql_query($sql) or die('108');
+			    while($row = mysql_fetch_assoc($result)){
+			    	$name = $row['user_name'];
+			    }
+
+			    $output = $output . $name . "," . $heart . "," . $lng . "," . $lat . "&" ;
+			}
+			return $output;
+		}
 	}
 
 	

@@ -44,6 +44,8 @@
 	$auth = 'auth';
 	$unauth = 'unauth';
 	$check = 'check';
+	$invite = 'match_request';
+	$look_family_data = 'look_family_data';
 
 
 	// $_POST['action'] = $check;
@@ -70,6 +72,14 @@
 
 		case $check:
 			check();
+			break;
+
+		case $invite:
+			invite();
+			break;
+
+		case $look_family_data:
+			look_family_data();
 			break;
 
 		default:
@@ -121,7 +131,7 @@
 		$wear_id = $_POST['wear_id'];
 		$family_id = $_POST['family_id'];
 
-		$sql = 'UPDATE `matches` SET `access` = "'.$a.'" WHERE `wear_id` = "'.$wear_id.'" AND `family_id` = "'.$family_id.'"';
+		$sql = 'UPDATE `matches` SET `access` = "'.$a.'" WHERE `family_id` = "'.$wear_id.'" AND `wear_id` = "'.$family_id.'"';
 		echo $t->raw_query($sql);
 	}
 
@@ -130,7 +140,7 @@
 
 		$wear_id = $_POST['wear_id'];
 
-		$sql = 'SELECT `family_id`, `user_name`, `phone`, `person_name` FROM `matches` LEFT JOIN `member` ON `wear_id` = `member`.`id` WHERE `access` = 0 AND `wear_id` = "'.$wear_id.'"';
+		$sql = 'SELECT `wear_id`, `user_name`, `phone`, `person_name` FROM `matches` LEFT JOIN `member` ON `wear_id` = `member`.`id` WHERE `access` = 0 AND `family_id` = "'.$wear_id.'"';
 
 		$result = $t->queryJSON($sql);
 
@@ -148,4 +158,24 @@
 
 	function exitCode($code = 501){
 		die(''.$code);
+	}
+
+	function invite(){
+		global $t;
+
+		$wear_id = $_POST['wear_id'];
+		$family_email = $_POST['family_email'];
+
+		//$sql = 'SELECT `id` FROM `member` WHERE `user_name` = "'. $family_email .'"';
+		//$target_id = $t->queryJSON($sql);
+		$target_id = $t->findUserId($family_email);
+		$sql = 'INSERT INTO `matches` (`wear_id`, `family_id`) VALUES ("'.$wear_id.'", "'.$target_id.'");';
+		$t->insert($sql);
+	}
+
+	function look_family_data(){
+		global $t;
+
+		$wear_id = $_POST['wear_id'];
+		echo $t->look_family_data($wear_id);
 	}
