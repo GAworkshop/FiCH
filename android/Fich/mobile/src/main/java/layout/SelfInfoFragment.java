@@ -15,6 +15,7 @@ import com.example.user.fich.Action;
 import com.example.user.fich.ConnectRequest;
 import com.example.user.fich.DBRequest;
 import com.example.user.fich.DataCallback;
+import com.example.user.fich.MyHeartRate;
 import com.example.user.fich.MySQLiteHelper;
 import com.example.user.fich.PreferencesHelper;
 import com.example.user.fich.R;
@@ -50,7 +51,7 @@ public class SelfInfoFragment extends Fragment {
     private String mParam2;
 
     LineChart lineChart;
-    float[] points = {70,80,85,72,81,95,84,55,104,93};
+    float[] points = {66,70,68,72,81,67,65,71,75,70};
 
     //private OnFragmentInteractionListener mListener;
 
@@ -161,7 +162,20 @@ public class SelfInfoFragment extends Fragment {
         lineChart.enableScroll();
 
         lineChart.setVisibleXRangeMaximum(120);
-
+/*
+        ArrayList<MyHeartRate> hr_arlist = sqLiteHelper.getHRList();
+        ArrayList<Entry> hr_list = new ArrayList<>();
+        for(int i=0;i<hr_arlist.size();i++){
+            hr_list.add(new Entry(i,hr_arlist.get(i).getHeartRate()));
+        }
+        System.out.println("heart rate list size : " + hr_arlist.size());
+        LineDataSet dataSet = new LineDataSet(hr_list, "heart");
+        dataSet.setDrawCircles(true);
+        dataSet.setColor(Color.RED);
+        lineChart.setData(new LineData(dataSet));
+        lineChart.enableScroll();
+        lineChart.setVisibleXRangeMaximum(120);
+*/
         return view;
     }
 

@@ -34,6 +34,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -151,18 +152,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
         Sensor hrSensor;
         Timer hrTimer;
         int hrPeriod = 5;
-        /*
-        private View myLayout;
-        private int specW, specH;
-        private final Point displaySize = new Point();
-        */
-        /*if(mTapCount%2==0){
-                            sensorManager.unregisterListener(this,hrSensor);
-                            sensorManager.registerListener(this, acSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                        }else{
-                            sensorManager.unregisterListener(this,acSensor);
-                            sensorManager.registerListener(this, hrSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                        }*/
+
+        PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK,"MyWakeLockTag");
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -352,14 +344,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
         public void onTapCommand(int tapType, int x, int y, long eventTime) {
             Resources resources = MyWatchFace.this.getResources();
             switch (tapType) {
-                /*
-                case TAP_TYPE_TOUCH:
-                    // The user has started touching the screen.
-                    break;
-                case TAP_TYPE_TOUCH_CANCEL:
-                    // The user has started a different gesture or otherwise cancelled the tap.
-                    break;
-                */
                 case TAP_TYPE_TAP:
                     // The user has completed the tap gesture.
                     if(!timerActive) {
@@ -515,13 +499,22 @@ public class MyWatchFace extends CanvasWatchFaceService {
             Sensor sensor = event.sensor;
             if(sensor.getType() == Sensor.TYPE_ACCELEROMETER){
                 //sendData("ac_value", event.values[0] + "," + event.values[1] + "," + event.values[2]);
-                //System.out.println("ac value : "+event.values[0] + "," + event.values[1] + "," + event.values[2]);
-                if(Math.abs(event.values[0])+Math.abs(event.values[1])+Math.abs(event.values[2]) >= 40){
-                    System.out.println("ac value : "+event.values[0] + "," + event.values[1] + "," + event.values[2]);
-                    if(!timerActive){
-                        detect();
+                if(pm.isScreenOn()){
+                    if(Math.abs(event.values[0])+Math.abs(event.values[1])+Math.abs(event.values[2]) >= 40){
+                        //System.out.println("ac value : "+event.values[0] + "," + event.values[1] + "," + event.values[2]);
+                        if(!timerActive){
+                            detect();
+                        }
+                    }
+                }else{
+                    if(Math.abs(event.values[0])+Math.abs(event.values[1])+Math.abs(event.values[2]) >= 20){
+                        System.out.println("ac value : "+event.values[0] + "," + event.values[1] + "," + event.values[2]);
+                        if(!timerActive){
+                            detect();
+                        }
                     }
                 }
+
             }else if(sensor.getType() == Sensor.TYPE_HEART_RATE){
                 tempHr += event.values[0];
                 System.out.println((hrCount+1) + " / 3 heart rate : " + event.values[0]);
@@ -562,6 +555,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 @Override
                 public void run() {
                     if(timerCount-- != 0) {
+                        wl.acquire();
+                        wl.release();
                         mVibrator.vibrate(500);
                     }else{
                         System.out.println("倒數未被取消 , 立即求救");

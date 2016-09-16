@@ -12,7 +12,7 @@ public class DBRequest {
     HashMap<String, String> data = new HashMap<String, String>();
     String url = "";
     boolean ready = false;
-    private static final String domain = "http://140.115.207.72/fich/api";
+    private static final String domain = "http://140.115.80.231/fich/api";
 
     public DBRequest(Action ua){
         this.action = ua;
@@ -37,6 +37,8 @@ public class DBRequest {
                 break;
             case CHECK_MATCH:
             case AUTH:
+            case MATCH_REQUEST:
+            case LOOK_FAMILY_DATA:
                 this.url = domain + "/Matches.php";
                 break;
             default:

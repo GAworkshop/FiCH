@@ -32,6 +32,7 @@ import org.json.JSONArray;
 import layout.CardFragment;
 import layout.ContactFragment;
 import layout.EscapeFragment;
+import layout.FamilyFragment;
 import layout.MapFragment;
 import layout.SelfInfoFragment;
 import layout.SetInfoActivity;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
-    private String[] tab_titles = {"醫療卡", "緊急聯絡人", "個人資訊", "鄰近醫療單位", "逃生指引"};
+    private String[] tab_titles = {"醫療卡", "緊急聯絡人", "健康狀況", "鄰近醫療單位", "健康平台"};
     private int[] tab_icons = {
             R.drawable.ic_card,
             R.drawable.ic_contact,
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tx, ty, tz;
     Toast toast;
 
-    private static final String page_url = "http://140.115.207.72/fich/FE/index.html";
+    private static final String page_url = "http://140.115.80.231/fich/FE/index.html";
 
     PreferencesHelper prefHelper;
 
@@ -300,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
                 case 3:
                     return MapFragment.newInstance("", "");
                 case 4:
-                    return EscapeFragment.newInstance("", "");
+                    return FamilyFragment.newInstance("", "");
                 default:
                     return new Fragment();
             }
@@ -385,10 +386,12 @@ public class MainActivity extends AppCompatActivity {
                         //things to do when there's more than zero match requests
                         left_drawer.getMenu().getItem(5).setEnabled(true);
                         relReq = jsonArray.toString();
+                        Log.e("checkMatchRequest yes: ", relReq);
                     }else{
                         //things to do when no match request
                         left_drawer.getMenu().getItem(5).setEnabled(false);
-                        relReq = "";
+                        relReq = jsonArray.toString();
+                        Log.e("checkMatchRequest no: ", relReq);
                     }
 
                 }catch (Exception e){

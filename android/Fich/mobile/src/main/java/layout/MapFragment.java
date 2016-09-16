@@ -246,6 +246,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }catch (SecurityException e){
 
         }
+        mMap.clear();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(23.8246732,121.0472636)));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(8));
         /*LatLng latlng =null;
@@ -305,7 +306,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             str+= "--------------------";
             System.out.println(str);
             new PlacesTask().execute(searchReq(location.getLatitude(), location.getLongitude()));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
 
         }
 
@@ -333,7 +334,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         sb.append("location=" + mLatitude + "," + mLongitude);
-        sb.append("&radius=5000");
+        sb.append("&radius=10000");
         sb.append("&types=" + "hospital");
         sb.append("&sensor=true");
         sb.append("&key=AIzaSyBke1_igYVgoZ77uxBo0zKpI8CSGKy8-KE");

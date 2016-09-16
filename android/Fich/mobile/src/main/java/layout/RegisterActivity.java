@@ -46,12 +46,16 @@ public class RegisterActivity extends Activity {
                 phone = phone_et.getText().toString().trim();
                 if((TextUtils.isEmpty(email))){
                     email_et.setError(getString(R.string.error_field_required));
+                    email_et.requestFocus();
                 }else if(!email.contains("@")){
                     email_et.setError(getString(R.string.error_invalid_email));
+                    email_et.requestFocus();
                 }else if(password.length() == 0){
                     password_et.setError(getString(R.string.error_field_required));
+                    password_et.requestFocus();
                 }else if(phone.length() == 0){
                     phone_et.setError(getString(R.string.error_field_required));
+                    phone_et.requestFocus();
                 }else{
                     DBRequest dbRequest = new DBRequest(Action.CREATE_USER);
                     dbRequest.setPair("name",email);

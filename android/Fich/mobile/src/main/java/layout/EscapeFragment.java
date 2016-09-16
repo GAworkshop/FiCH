@@ -75,7 +75,7 @@ public class EscapeFragment extends Fragment {
 
 
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("http://140.115.207.72/fich/FE/test.html");
+        webView.loadUrl("http://140.115.80.231/fich/FE/test.html");
 
         return view;
     }

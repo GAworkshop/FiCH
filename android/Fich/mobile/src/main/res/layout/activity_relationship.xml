@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="姓名"
+            android:text="信箱"
             android:layout_weight="3"
             android:textAlignment="center" />
 

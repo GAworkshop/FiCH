@@ -16,7 +16,9 @@ public enum Action {
     HEART_SAVE("create_heart", 9),
     HEART_SELECT("select_heart", 10),
     CHECK_MATCH("check", 11),
-    AUTH("auth", 12);
+    AUTH("auth", 12),
+    MATCH_REQUEST("match_request", 13),
+    LOOK_FAMILY_DATA("look_family_data", 14);
 
     Action(String action, int value){
         this.action_string = action;

@@ -44,8 +44,13 @@ public class ConnectRequest {
                             }
 
                             try {
-                                return new JSONArray(code);
+                                if(conn.dbRequest.action == Action.LOOK_FAMILY_DATA){
+                                    return new JSONArray("["+result+"]");
+                                }else {
+                                    return new JSONArray(code);
+                                }
                             }catch (Exception e2){
+                                e2.printStackTrace();
                                 return null;
                             }
                         }

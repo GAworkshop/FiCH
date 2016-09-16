@@ -296,11 +296,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
                                 prefHelpr.storeData("isLogin", true);
                                 prefHelpr.storeData(getResources().getString(R.string.UID), dataRow.getInt(0));
-                                prefHelpr.storeData(getResources().getString(R.string.name), dataRow.getInt(4));
+                                prefHelpr.storeData(getResources().getString(R.string.name), dataRow.getString(4));
                                 prefHelpr.storeData(getResources().getString(R.string.gender_key), dataRow.getString(5));
-                                prefHelpr.storeData(getResources().getString(R.string.birthday), dataRow.getInt(6));
-                                prefHelpr.storeData(getResources().getString(R.string.history), dataRow.getInt(7));
-                                prefHelpr.storeData(getResources().getString(R.string.allergic), dataRow.getInt(8));
+                                prefHelpr.storeData(getResources().getString(R.string.birthday), dataRow.getString(6));
+                                prefHelpr.storeData(getResources().getString(R.string.history), dataRow.getString(7));
+                                prefHelpr.storeData(getResources().getString(R.string.allergic), dataRow.getString(8));
 
                                 if(dataRow.getBoolean(10)){
                                     prefHelpr.storeData(getResources().getString(R.string.is_setting_done), true);
@@ -541,7 +541,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 String parm = "x=0.123&y=0.123&z=0.123";
                 parm = parseData(data);
 
-                url = new URL("http://140.115.207.72/fich/api/member.php");
+                url = new URL("http://140.115.80.231/fich/api/member.php");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
                 urlConnection.setRequestMethod("POST");

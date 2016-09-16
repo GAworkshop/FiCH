@@ -316,7 +316,7 @@ public class LocService extends Service implements
                 }else if (item.getUri().getPath().compareTo("/SosSignal") == 0) {
                     ArrayList<Contact> al = prefHelper.getContactList();
                     SmsManager sms = SmsManager.getDefault();
-                    String text = "HELP!!!";
+                    String text = "楊秉樺 在桃園市中壢區中大路300號 (GPS:121.194929 , 24.971242)可能有緊急狀況,請立即聯絡!";
                     for(Contact c:al){
                         String number = c.getPhone();
                         sms.sendTextMessage(number, null, text, null, null);

@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:id="@+id/imageView"
             android:layout_weight="2"
-            android:src="@drawable/me"
+            android:src="@drawable/boy"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"/>
 
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="年齡"
+                android:text="生日"
                 android:id="@+id/textView3"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1" />
